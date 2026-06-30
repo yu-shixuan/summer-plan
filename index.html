@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+<head>
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+<title>2026暑假学习计划 — 提前准备版</title>
+<style>
+:root {
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --text: #1e293b;
+    --text2: #64748b;
+    --border: #e2e8f0;
+    --shadow: 0 1px 3px rgba(0,0,0,0.08);
+    --danger: #ef4444;
+    --warn: #f59e0b;
+    --ok: #10b981;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    font-family: "PingFang SC","Microsoft YaHei","Hiragino Sans GB",sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.6;
+    padding: 16px;
+}
+.container { max-width: 1300px; margin: 0 auto; }
+header {
+    text-align: center; padding: 32px 20px;
+    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #6366f1 100%);
+    color: white; border-radius: 14px; margin-bottom: 20px; box-shadow: 0 4px 20px rgba(59,130,246,0.25);
+}
+header h1 { font-size: 2em; margin-bottom: 4px; }
+header .sub { font-size: 1em; opacity: 0.85; }
+
+/* Tab bar */
+.tab-bar {
+    display: flex; gap: 4px; margin-bottom: 0; background: var(--bg);
+    border-radius: 12px 12px 0 0; overflow: hidden;
+}
+.tab-btn {
+    padding: 12px 24px; border: none; background: #e2e8f0; cursor: pointer;
+    font-size: 0.95em; font-weight: 600; color: var(--text2);
+    border-radius: 10px 10px 0 0; transition: all 0.2s;
+}
+.tab-btn:hover { background: #cbd5e1; }
+.tab-btn.active { background: var(--card); color: #1e40af; box-shadow: 0 -2px 8px rgba(0,0,0,0.06); }
+.tab-pane { display: none; background: var(--card); border-radius: 0 12px 12px 12px; padding: 24px; box-shadow: var(--shadow); margin-bottom: 20px; }
+.tab-pane.active { display: block; }
+
+/* DDL Dashboard */
+.dashboard-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; }
+.ddl-card {
+    padding: 12px 14px; border-radius: 8px; border-left: 4px solid;
+    font-size: 0.92em; display: flex; justify-content: space-between; align-items: center;
+}
+.ddl-card.urgent { animation: pulse 1.5s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.7} }
+.ddl-card .label { flex: 1; }
+.ddl-card .meta { font-size: 0.85em; color: var(--text2); white-space: nowrap; margin-left: 8px; }
+
+/* Week cards */
+.week-grid { display: flex; flex-direction: column; gap: 12px; }
+.week-card { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+.week-hdr {
+    background: #f8fafc; padding: 12px 16px; cursor: pointer;
+    display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 1px solid var(--border); user-select: none;
+}
+.week-hdr:hover { background: #f1f5f9; }
+.week-hdr h3 { font-size: 1.05em; }
+.week-body { display: none; }
+.week-body.open { display: block; }
+.day-row {
+    display: grid; grid-template-columns: 90px 1fr 1fr;
+    gap: 8px; padding: 8px 12px; border-bottom: 1px solid #f8fafc;
+    align-items: start; font-size: 0.9em;
+}
+.day-row:last-child { border-bottom: none; }
+.day-label { font-weight: 600; color: var(--text2); padding-top: 2px; }
+.day-col { display: flex; flex-wrap: wrap; gap: 4px; align-items: flex-start; }
+.task-tag {
+    padding: 3px 8px; border-radius: 5px; font-size: 0.82em;
+    color: white; font-weight: 500; white-space: nowrap;
+}
+.task-tag.math { background: #3b82f6; }
+.task-tag.physics { background: #f59e0b; }
+.task-tag.chemistry { background: #8b5cf6; }
+.task-tag.geography { background: #10b981; }
+.task-tag.chinese { background: #ef4444; }
+.task-tag.english { background: #14b8a6; }
+.empty-tag { color: #cbd5e1; font-size: 0.85em; font-style: italic; }
+
+/* Task completion checkboxes & synced state */
+.task-tag.completed { opacity: 0.4; text-decoration: line-through; }
+.task-check {
+    display: inline-flex; align-items: center; gap: 2px; cursor: pointer;
+    user-select: none;
+}
+.task-check input[type="checkbox"] {
+    width: 14px; height: 14px; cursor: pointer; accent-color: #10b981;
+    margin: 0;
+}
+.task-check input[type="checkbox"]:checked + .task-tag {
+    opacity: 0.4; text-decoration: line-through;
+}
+.ddl-card.completed { opacity: 0.4; }
+.ddl-card.completed .label { text-decoration: line-through; }
+.ddl-card .ddl-check {
+    width: 16px; height: 16px; cursor: pointer; accent-color: #10b981;
+    flex-shrink: 0; margin-right: 8px;
+}
+.arrange-check {
+    width: 16px; height: 16px; cursor: pointer; accent-color: #10b981;
+}
+.arrange-table tr.completed td { opacity: 0.4; }
+.arrange-table tr.completed td:first-child .task-tag { text-decoration: line-through; }
+
+/* Phase badges */
+.phase-badge {
+    display: inline-block; padding: 1px 6px; border-radius: 8px;
+    font-size: 0.72em; font-weight: 600; margin-left: 3px;
+    vertical-align: middle; line-height: 1.4;
+}
+.phase-badge.work { background: #dbeafe; color: #1e40af; }
+.phase-badge.check { background: #fef3c7; color: #92400e; }
+.phase-badge.correct { background: #fce7f3; color: #9d174d; }
+.phase-badge.submit { background: #fee2e2; color: #991b1b; }
+.phase-badge.read { background: #e0e7ff; color: #3730a3; }
+.phase-badge.memorize { background: #f3e8ff; color: #6b21a8; }
+.phase-badge.special { background: #d1fae5; color: #065f46; }
+.phase-label {
+    font-size: 0.78em; color: var(--text2); margin-right: 4px;
+    font-weight: 500;
+}
+
+/* DDL column header */
+.col-header {
+    font-size: 0.75em; color: var(--text2); margin-bottom: 4px;
+    font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
+}
+
+/* Arrangement table */
+.arrange-table { width: 100%; border-collapse: collapse; font-size: 0.92em; }
+.arrange-table th,.arrange-table td { border: 1px solid var(--border); padding: 8px 10px; text-align: left; }
+.arrange-table th { background: #f8fafc; font-weight: 600; font-size: 0.85em; }
+.arrange-table tr:nth-child(even) { background: #fafbfc; }
+.buffer-badge {
+    padding: 2px 8px; border-radius: 10px; font-size: 0.8em;
+    background: #dcfce7; color: #166534; font-weight: 600;
+}
+.ddl-badge {
+    padding: 2px 8px; border-radius: 10px; font-size: 0.8em;
+    background: #fee2e2; color: #991b1b; font-weight: 600;
+}
+
+/* Todo section */
+.todo-input-area { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+.todo-input-area input,.todo-input-area select {
+    padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px;
+    font-size: 0.95em; font-family: inherit;
+}
+.todo-input-area input[type="text"] { flex: 1; min-width: 200px; }
+.todo-input-area button {
+    padding: 8px 16px; background: #3b82f6; color: white; border: none;
+    border-radius: 6px; cursor: pointer; font-size: 0.95em; font-weight: 600;
+}
+.todo-input-area button:hover { background: #2563eb; }
+.todo-list { list-style: none; }
+.todo-item {
+    display: flex; align-items: center; gap: 10px; padding: 8px 0;
+    border-bottom: 1px solid #f1f5f9; font-size: 0.95em;
+}
+.todo-item input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; }
+.todo-item.done .todo-text { text-decoration: line-through; color: #94a3b8; }
+.todo-item .todo-date { font-size: 0.82em; color: var(--text2); margin-left: auto; }
+.todo-item .todo-del {
+    background: none; border: none; color: #ef4444; cursor: pointer;
+    font-size: 1.1em; padding: 2px 6px;
+}
+
+/* Preview advice */
+.advice-card {
+    background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 10px;
+    padding: 18px; margin-bottom: 16px;
+}
+.advice-card h3 { font-size: 1.15em; margin-bottom: 10px; color: #0c4a6e; }
+.advice-card ul { padding-left: 20px; }
+.advice-card li { margin-bottom: 8px; }
+.step-num {
+    display: inline-block; width: 24px; height: 24px; line-height: 24px;
+    text-align: center; background: #3b82f6; color: white; border-radius: 50%;
+    font-size: 0.8em; margin-right: 6px;
+}
+
+/* Buttons */
+.btn { padding: 6px 14px; border-radius: 6px; border: 1px solid var(--border); background: white; cursor: pointer; font-size: 0.85em; }
+.btn:hover { background: #f1f5f9; }
+.btn-primary { background: #3b82f6; color: white; border-color: #3b82f6; }
+.btn-primary:hover { background: #2563eb; }
+.btn-row { display: flex; gap: 8px; margin-bottom: 12px; }
+
+/* Sync toolbar */
+.sync-bar {
+    display: flex; align-items: center; gap: 8px; padding: 8px 14px;
+    background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;
+    margin-bottom: 12px; font-size: 0.85em; flex-wrap: wrap;
+}
+.sync-bar .sync-status { color: #166534; font-size: 0.85em; font-weight: 500; white-space: nowrap; }
+.sync-bar .sync-hint { color: #64748b; font-size: 0.75em; flex-basis: 100%; margin-top: 4px; }
+.sync-bar .btn-sync-setup { background: #10b981; color: white; border: none; border-radius: 6px; padding: 5px 14px; cursor: pointer; font-size: 0.85em; font-weight: 600; white-space: nowrap; }
+.sync-bar .btn-sync-setup:hover { background: #059669; }
+.sync-bar .btn-sync-manual { background: none; border: 1px solid #94a3b8; border-radius: 6px; padding: 4px 10px; cursor: pointer; font-size: 0.82em; color: #475569; white-space: nowrap; }
+.sync-bar .btn-sync-manual:hover { background: #f1f5f9; border-color: #64748b; }
+.sync-bar .sync-divider { color: #cbd5e1; font-size: 0.85em; }
+.sync-bar .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 4px; flex-shrink: 0; }
+.sync-bar .dot.green { background: #10b981; animation: dotPulse 2s infinite; }
+.sync-bar .dot.yellow { background: #f59e0b; animation: dotPulse 1s infinite; }
+.sync-bar .dot.gray { background: #94a3b8; }
+@keyframes dotPulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+/* Toast notification */
+.toast {
+    position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+    background: #1e293b; color: white; padding: 10px 24px; border-radius: 8px;
+    font-size: 0.9em; pointer-events: none; z-index: 9999;
+    opacity: 0; transition: opacity 0.3s;
+}
+.toast.show { opacity: 1; }
+
+/* Drag-drop import highlight */
+body.drag-over::after {
+    content: '放开以导入进度'; position: fixed; inset: 0;
+    background: rgba(16, 185, 129, 0.12); border: 3px dashed #10b981;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5em; font-weight: 700; color: #166534; z-index: 9990;
+}
+
+/* Legend */
+.legend { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; font-size: 0.85em; }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+
+@media print {
+    body { background: white; padding: 0; }
+    .tab-bar { display: none; }
+    .tab-pane { display: block !important; box-shadow: none; border: 1px solid #ddd; page-break-inside: avoid; }
+    .week-body { display: block !important; }
+    header { border-radius: 0; }
+}
+
+@media (max-width: 768px) {
+    .day-row { grid-template-columns: 60px 1fr; }
+    .day-row > :last-child { display: none; }
+    .dashboard-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class='container'>
+<header>
+<h1>2026年暑假学习计划</h1>
+<p class='sub'>江苏准高二 · 物化地组合 · 7/1 - 8/30 · 提前准备策略版</p>
+</header>
+
+<!-- Sync bar: Cloud sync + URL hash fallback -->
+<div class='sync-bar' id='sync-bar'>
+    <span class='dot gray' id='sync-dot'></span>
+    <span class='sync-status' id='sync-status'>📎 链接即进度（可配置云同步）</span>
+    <button class='btn-sync-setup' onclick='promptSyncServer()' title='设置云同步服务器'>☁️ 配置云同步</button>
+    <span class='sync-divider'>|</span>
+    <button class='btn-sync-manual' onclick='copySyncLink()'>📋 复制链接</button>
+    <button class='btn-sync-manual' onclick='showQRCode()'>📱 扫码</button>
+    <button class='btn-sync-manual' onclick='exportProgress()'>💾</button>
+    <button class='btn-sync-manual' onclick='document.getElementById("import-file").click()'>📂</button>
+    <input type='file' id='import-file' accept='.json' style='display:none' onchange='importProgress(this)'>
+    <span class='sync-hint' id='sync-hint'>点"配置云同步"输入后端地址 → 同URL任意设备自动同步</span>
+</div>
+
+<!-- QR Code modal -->
+<div id='qr-modal' style='display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);z-index:999;align-items:center;justify-content:center;'>
+    <div style='background:white;border-radius:16px;padding:24px;text-align:center;max-width:320px;'>
+        <h3 style='margin:0 0 8px;'>扫码同步进度</h3>
+        <p style='color:#64748b;font-size:0.85em;margin:0 0 16px;'>用手机扫一扫，进度即刻同步</p>
+        <img id='qr-img' src='' style='width:250px;height:250px;border-radius:8px;' alt='QR Code'>
+        <p style='color:#94a3b8;font-size:0.75em;margin:12px 0 0;'>也可直接复制链接发送到手机</p>
+        <button class='btn' onclick='document.getElementById("qr-modal").style.display="none"' style='margin-top:12px;'>关闭</button>
+    </div>
+</div>
+
+<!-- DDL Dashboard -->
+<div class='tab-pane active' id='pane-dashboard'>
+<h2 style='margin-bottom:14px;'>DDL 仪表盘 · 未来两周所有截止节点（完成/订正/提交）</h2>
+<div class='legend'>
+<span class='legend-dot' style='background:#ef4444'></span> 今天/明天到期
+<span class='legend-dot' style='background:#f59e0b'></span> 3-5天内
+<span class='legend-dot' style='background:#10b981'></span> 一周后
+</div>
+<div class='dashboard-grid' id='ddl-grid'></div>
+</div>
+
+<!-- Tab bar -->
+<div class='tab-bar'>
+<button class='tab-btn active' onclick='switchTab("calendar")'>日历视图</button>
+<button class='tab-btn' onclick='switchTab("arrange")'>提前安排表</button>
+<button class='tab-btn' onclick='switchTab("todo")'>每日待办</button>
+<button class='tab-btn' onclick='switchTab("advice")'>预习建议</button>
+</div>
+
+<!-- Calendar Tab -->
+<div class='tab-pane active' id='pane-calendar'>
+<div style='margin-bottom:12px;'>
+<h2 style='display:inline;margin-right:12px;'>暑假日历 · 上交节点一览</h2>
+<span style='font-size:0.85em;color:var(--text2);'>左栏=需上交/提交的截止日 | 右栏=建议提前完成的作业（为后续上交做准备）</span>
+</div>
+<div class='btn-row'>
+<button class='btn' onclick='expandAllWeeks()'>全部展开</button>
+<button class='btn' onclick='collapseAllWeeks()'>全部收起</button>
+</div>
+<div class='legend'>
+<span class='legend-dot' style='background:#3b82f6'></span> 数学
+<span class='legend-dot' style='background:#f59e0b'></span> 物理
+<span class='legend-dot' style='background:#8b5cf6'></span> 化学
+<span class='legend-dot' style='background:#10b981'></span> 地理
+<span class='legend-dot' style='background:#ef4444'></span> 语文
+<span class='legend-dot' style='background:#14b8a6'></span> 英语
+</div>
+<div class='week-grid' id='week-grid'></div>
+</div>
+
+<!-- Arrange Tab -->
+<div class='tab-pane' id='pane-arrange'>
+<h2 style='margin-bottom:14px;'>提前安排表 · 按科目查看（仅展示"完成作业"阶段）</h2>
+<p style='color:var(--text2);margin-bottom:12px;font-size:0.9em;'>
+  核心原则：每个任务的 <span class='buffer-badge' style='padding:3px 10px;'>建议完成日</span> 比学校 <span class='ddl-badge' style='padding:3px 10px;'>截止日</span> 提前3天。订正/提交等后续阶段请查看<a href="javascript:switchTab('calendar')" style="color:#3b82f6;">日历视图</a>。
+</p>
+<div class='btn-row' id='arrange-filter-btns'>
+<button class='btn btn-primary' onclick='filterArrange("all")'>全部</button>
+<button class='btn' onclick='filterArrange("math")'>数学</button>
+<button class='btn' onclick='filterArrange("physics")'>物理</button>
+<button class='btn' onclick='filterArrange("chemistry")'>化学</button>
+<button class='btn' onclick='filterArrange("geography")'>地理</button>
+<button class='btn' onclick='filterArrange("chinese")'>语文</button>
+<button class='btn' onclick='filterArrange("english")'>英语</button>
+</div>
+<div style='max-height:70vh;overflow-y:auto;'>
+<table class='arrange-table' id='arrange-table'>
+<thead><tr>
+<th>科目</th><th>任务</th><th>✓</th><th>建议完成日</th><th>学校截止日</th><th>缓冲天数</th>
+</tr></thead>
+<tbody id='arrange-tbody'></tbody>
+</table>
+</div>
+</div>
+
+<!-- Todo Tab -->
+<div class='tab-pane' id='pane-todo'>
+<h2 style='margin-bottom:14px;'>每日待办清单</h2>
+<p style='color:var(--text2);margin-bottom:12px;font-size:0.9em;'>
+  每天在这里添加自己的待办任务。数据保存在浏览器中，不会丢失。
+</p>
+<div class='todo-input-area'>
+<select id='todo-subject'>
+<option value=''>选择科目</option>
+<option value='math'>数学</option><option value='physics'>物理</option>
+<option value='chemistry'>化学</option><option value='geography'>地理</option>
+<option value='chinese'>语文</option><option value='english'>英语</option>
+<option value='other'>其他</option>
+</select>
+<input type='text' id='todo-text' placeholder='输入待办内容...' maxlength='200'>
+<input type='date' id='todo-date'>
+<button onclick='addTodo()'>添加</button>
+</div>
+<ul class='todo-list' id='todo-list'></ul>
+<p style='margin-top:16px;font-size:0.85em;color:var(--text2);'>
+  提示：勾选完成的任务会自动移到列表底部。每天开始时可以查看并清理。
+</p>
+</div>
+
+<!-- Advice Tab -->
+<div class='tab-pane' id='pane-advice'>
+<div class='advice-card'>
+<h3><span class='step-num'>数</span> 数学预习建议</h3>
+<p style='margin-bottom:10px;color:var(--text2);'>
+  江苏物化地组合，高二数学通常进入以下核心模块。你提到基础不扎实、想锻炼解题思维，建议这样安排：
+</p>
+<ul>
+<li><strong>优先预习：解析几何（圆锥曲线）</strong> — 高二上的重头戏，椭圆、双曲线、抛物线的标准方程与几何性质。这部分对代数运算和几何直观要求都很高，提前接触可以大大减轻开学压力。建议先用课本过一遍定义和标准方程推导，每节做3-5道课后习题。</li>
+<li><strong>次要预习：数列</strong> — 等差/等比数列的通项与求和、递推数列。这部分套路性强，适合通过做题建立"题型-方法"映射。可以找一本同步教辅，按题型分类练习。</li>
+<li><strong>每天投入</strong>：预习阶段每天40-60分钟即可，重在"理解+少量练习"，而非大量刷题。开学后老师讲课时你会更有底气。</li>
+<li><strong>资源建议</strong>：课本为主、教辅为辅。B站搜索"高二数学圆锥曲线"有很多免费讲解视频。不急着买大量资料，先吃透课本例题。</li>
+<li><strong>衔接注意</strong>：解析几何对"直线与圆"的基础要求高。如果你高一这块有漏洞，预习圆锥曲线之前先用1-2天回顾一下直线方程、圆的方程、点到直线距离公式。</li>
+</ul>
+</div>
+
+<div class='advice-card'>
+<h3><span class='step-num'>化</span> 化学预习建议</h3>
+<p style='margin-bottom:10px;color:var(--text2);'>
+  你的情况比较特殊——化学平衡这几节学校只给了网课不重讲，加上基础记背不熟、大题答题不熟。建议分两条线并行：
+</p>
+<ul>
+<li><strong>第一优先级：化学平衡（暑假必须拿下）</strong>
+  <br>① 先看学校网课（3节×1h），边看边记笔记，重点理解：可逆反应、化学平衡状态的特征（逆、等、动、定、变）、平衡常数K的计算与意义。
+  <br>② 网课看完后，用课本或教辅做配套练习。先从"判断平衡状态"这类概念题入手，再做K值计算。
+  <br>③ 进阶：勒夏特列原理（浓度/温度/压强对平衡的影响）是考试高频考点，建议单独做专题训练。
+  <br>④ 如果网课讲得不够清楚，B站搜"一化儿 化学平衡"或"李政化学 平衡"，这两个UP主讲得比较透彻。
+</li>
+<li><strong>第二优先级：反应原理类知识储备</strong>
+  <br>化学反应速率（碰撞理论、活化能）、化学反应与能量（焓变、热化学方程式）、水溶液中的离子平衡（弱电解质电离、水的电离、pH计算、盐类水解）。这些是高二上学期的核心内容，建议暑假至少把"反应速率+焓变"这两块过一遍。
+</li>
+<li><strong>记背强化</strong>：化学方程式、离子方程式、常见物质性质——这些是基础功。每天花10-15分钟默写/回忆5-10个方程式，滚动复习。
+</li>
+<li><strong>预习节奏</strong>：化学平衡用第1-2周集中攻克（配合网课），反应原理类从第3周开始每天30分钟。抄答案的20套化学卷子不要完全浪费——快速浏览题目可以帮你识别哪些知识点还没学过，直接标记出来作为预习目标。</li>
+</ul>
+</div>
+
+<div class='advice-card' style='background:#fefce8;border-color:#fde68a;'>
+<h3 style='color:#854d0e;'>暑期整体预习节奏建议</h3>
+<ul>
+<li><strong>第1-2周（7/1-7/12）</strong>：化学平衡网课+练习完成。数学可以开始翻翻圆锥曲线课本（不赶进度，每天看一点）。</li>
+<li><strong>第3-5周（7/13-8/2）</strong>：数学圆锥曲线预习进入正轨（每天40-60分钟）。化学转向反应原理预习。利用提前完成作业腾出的时间推进。</li>
+<li><strong>第6-8周（8/3-8/30）</strong>：数学数列预习。化学巩固薄弱环节。开学前一周做一次整体回顾。</li>
+<li><strong>关键提醒</strong>：预习的目的是"建立框架、降低开学认知负荷"，不是"暑假学完"。开学后老师讲课才是主要学习途径，预习让你听课更高效、做作业更快——这才是"提前准备"的真正价值。</li>
+</ul>
+</div>
+</div>
+
+<!-- DDL Dashboard (always visible below tabs) -->
+<div style='margin-top:20px;'></div>
+</div><!-- /container -->
+
+<script>
+// ============================================================
+// DATA (injected from Python)
+// ============================================================
+const ALL_TASKS = [{"ddl": "2026-07-06", "label": "化学作业1 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业1 — 完成", "early": "2026-07-03"}, {"ddl": "2026-07-06", "label": "化学作业1 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业1 — 对答案", "early": null}, {"ddl": "2026-07-06", "label": "化学作业1 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业1 — 上交", "early": null}, {"ddl": "2026-07-07", "label": "化学作业2 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业2 — 完成", "early": "2026-07-04"}, {"ddl": "2026-07-07", "label": "化学作业2 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业2 — 对答案", "early": null}, {"ddl": "2026-07-07", "label": "化学作业2 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业2 — 上交", "early": null}, {"ddl": "2026-07-08", "label": "化学作业3 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业3 — 完成", "early": "2026-07-05"}, {"ddl": "2026-07-08", "label": "化学作业3 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业3 — 对答案", "early": null}, {"ddl": "2026-07-08", "label": "化学作业3 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业3 — 上交", "early": null}, {"ddl": "2026-07-09", "label": "化学作业4 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业4 — 完成", "early": "2026-07-06"}, {"ddl": "2026-07-09", "label": "化学作业4 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业4 — 对答案", "early": null}, {"ddl": "2026-07-09", "label": "化学作业4 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业4 — 上交", "early": null}, {"ddl": "2026-07-10", "label": "化学作业5 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业5 — 完成", "early": "2026-07-07"}, {"ddl": "2026-07-10", "label": "化学作业5 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业5 — 对答案", "early": null}, {"ddl": "2026-07-10", "label": "化学作业5 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业5 — 上交", "early": null}, {"ddl": "2026-07-13", "label": "化学作业6 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业6 — 完成", "early": "2026-07-10"}, {"ddl": "2026-07-13", "label": "化学作业6 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业6 — 对答案", "early": null}, {"ddl": "2026-07-13", "label": "化学作业6 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业6 — 上交", "early": null}, {"ddl": "2026-07-14", "label": "化学作业7 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业7 — 完成", "early": "2026-07-11"}, {"ddl": "2026-07-14", "label": "化学作业7 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业7 — 对答案", "early": null}, {"ddl": "2026-07-14", "label": "化学作业7 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业7 — 上交", "early": null}, {"ddl": "2026-07-15", "label": "化学作业8 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业8 — 完成", "early": "2026-07-12"}, {"ddl": "2026-07-15", "label": "化学作业8 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业8 — 对答案", "early": null}, {"ddl": "2026-07-15", "label": "化学作业8 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业8 — 上交", "early": null}, {"ddl": "2026-07-16", "label": "化学作业9 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业9 — 完成", "early": "2026-07-13"}, {"ddl": "2026-07-16", "label": "化学作业9 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业9 — 对答案", "early": null}, {"ddl": "2026-07-16", "label": "化学作业9 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业9 — 上交", "early": null}, {"ddl": "2026-07-17", "label": "化学作业10 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业10 — 完成", "early": "2026-07-14"}, {"ddl": "2026-07-17", "label": "化学作业10 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业10 — 对答案", "early": null}, {"ddl": "2026-07-17", "label": "化学作业10 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业10 — 上交", "early": null}, {"ddl": "2026-07-20", "label": "化学作业11 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业11 — 完成", "early": "2026-07-17"}, {"ddl": "2026-07-20", "label": "化学作业11 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业11 — 对答案", "early": null}, {"ddl": "2026-07-20", "label": "化学作业11 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业11 — 上交", "early": null}, {"ddl": "2026-07-21", "label": "化学作业12 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业12 — 完成", "early": "2026-07-18"}, {"ddl": "2026-07-21", "label": "化学作业12 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业12 — 对答案", "early": null}, {"ddl": "2026-07-21", "label": "化学作业12 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业12 — 上交", "early": null}, {"ddl": "2026-07-22", "label": "化学作业13 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业13 — 完成", "early": "2026-07-19"}, {"ddl": "2026-07-22", "label": "化学作业13 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业13 — 对答案", "early": null}, {"ddl": "2026-07-22", "label": "化学作业13 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业13 — 上交", "early": null}, {"ddl": "2026-07-23", "label": "化学作业14 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业14 — 完成", "early": "2026-07-20"}, {"ddl": "2026-07-23", "label": "化学作业14 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业14 — 对答案", "early": null}, {"ddl": "2026-07-23", "label": "化学作业14 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业14 — 上交", "early": null}, {"ddl": "2026-07-24", "label": "化学作业15 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业15 — 完成", "early": "2026-07-21"}, {"ddl": "2026-07-24", "label": "化学作业15 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业15 — 对答案", "early": null}, {"ddl": "2026-07-24", "label": "化学作业15 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业15 — 上交", "early": null}, {"ddl": "2026-08-03", "label": "化学作业16 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业16 — 完成", "early": "2026-07-31"}, {"ddl": "2026-08-03", "label": "化学作业16 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业16 — 对答案", "early": null}, {"ddl": "2026-08-03", "label": "化学作业16 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业16 — 上交", "early": null}, {"ddl": "2026-08-04", "label": "化学作业17 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业17 — 完成", "early": "2026-08-01"}, {"ddl": "2026-08-04", "label": "化学作业17 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业17 — 对答案", "early": null}, {"ddl": "2026-08-04", "label": "化学作业17 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业17 — 上交", "early": null}, {"ddl": "2026-08-05", "label": "化学作业18 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业18 — 完成", "early": "2026-08-02"}, {"ddl": "2026-08-05", "label": "化学作业18 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业18 — 对答案", "early": null}, {"ddl": "2026-08-05", "label": "化学作业18 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业18 — 上交", "early": null}, {"ddl": "2026-08-06", "label": "化学作业19 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业19 — 完成", "early": "2026-08-03"}, {"ddl": "2026-08-06", "label": "化学作业19 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业19 — 对答案", "early": null}, {"ddl": "2026-08-06", "label": "化学作业19 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业19 — 上交", "early": null}, {"ddl": "2026-08-07", "label": "化学作业20 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业20 — 完成", "early": "2026-08-04"}, {"ddl": "2026-08-07", "label": "化学作业20 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业20 — 对答案", "early": null}, {"ddl": "2026-08-07", "label": "化学作业20 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业20 — 上交", "early": null}, {"ddl": "2026-08-10", "label": "化学作业21 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业21 — 完成", "early": "2026-08-07"}, {"ddl": "2026-08-10", "label": "化学作业21 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业21 — 对答案", "early": null}, {"ddl": "2026-08-10", "label": "化学作业21 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业21 — 上交", "early": null}, {"ddl": "2026-08-11", "label": "化学作业22 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业22 — 完成", "early": "2026-08-08"}, {"ddl": "2026-08-11", "label": "化学作业22 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业22 — 对答案", "early": null}, {"ddl": "2026-08-11", "label": "化学作业22 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业22 — 上交", "early": null}, {"ddl": "2026-08-12", "label": "化学作业23 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业23 — 完成", "early": "2026-08-09"}, {"ddl": "2026-08-12", "label": "化学作业23 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业23 — 对答案", "early": null}, {"ddl": "2026-08-12", "label": "化学作业23 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业23 — 上交", "early": null}, {"ddl": "2026-08-13", "label": "化学作业24 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业24 — 完成", "early": "2026-08-10"}, {"ddl": "2026-08-13", "label": "化学作业24 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业24 — 对答案", "early": null}, {"ddl": "2026-08-13", "label": "化学作业24 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业24 — 上交", "early": null}, {"ddl": "2026-08-14", "label": "化学作业25 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业25 — 完成", "early": "2026-08-11"}, {"ddl": "2026-08-14", "label": "化学作业25 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业25 — 对答案", "early": null}, {"ddl": "2026-08-14", "label": "化学作业25 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业25 — 上交", "early": null}, {"ddl": "2026-08-17", "label": "化学作业26 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业26 — 完成", "early": "2026-08-14"}, {"ddl": "2026-08-17", "label": "化学作业26 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业26 — 对答案", "early": null}, {"ddl": "2026-08-17", "label": "化学作业26 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业26 — 上交", "early": null}, {"ddl": "2026-08-18", "label": "化学作业27 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业27 — 完成", "early": "2026-08-15"}, {"ddl": "2026-08-18", "label": "化学作业27 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业27 — 对答案", "early": null}, {"ddl": "2026-08-18", "label": "化学作业27 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业27 — 上交", "early": null}, {"ddl": "2026-08-19", "label": "化学作业28 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业28 — 完成", "early": "2026-08-16"}, {"ddl": "2026-08-19", "label": "化学作业28 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业28 — 对答案", "early": null}, {"ddl": "2026-08-19", "label": "化学作业28 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业28 — 上交", "early": null}, {"ddl": "2026-08-20", "label": "化学作业29 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业29 — 完成", "early": "2026-08-17"}, {"ddl": "2026-08-20", "label": "化学作业29 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业29 — 对答案", "early": null}, {"ddl": "2026-08-20", "label": "化学作业29 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业29 — 上交", "early": null}, {"ddl": "2026-08-21", "label": "化学作业30 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业30 — 完成", "early": "2026-08-18"}, {"ddl": "2026-08-21", "label": "化学作业30 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业30 — 对答案", "early": null}, {"ddl": "2026-08-21", "label": "化学作业30 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业30 — 上交", "early": null}, {"label": "数学1~4练 — 完成", "ddl": "2026-07-08", "subject": "math", "type": "complete", "phase": "work", "range": "1~4", "id": "math-数学1~4练 — 完成", "early": "2026-07-05"}, {"label": "数学1~4练 — 对答案", "ddl": "2026-07-09", "subject": "math", "type": "check_answer", "phase": "check", "range": "1~4", "id": "math-数学1~4练 — 对答案", "early": null}, {"label": "数学1~4练 — 订正", "ddl": "2026-07-10", "subject": "math", "type": "correct", "phase": "correct", "range": "1~4", "id": "math-数学1~4练 — 订正", "early": null}, {"label": "数学1~4练 — 提交", "ddl": "2026-07-11", "subject": "math", "type": "submit", "phase": "submit", "range": "1~4", "id": "math-数学1~4练 — 提交", "early": null}, {"label": "数学5~8练 — 完成", "ddl": "2026-07-14", "subject": "math", "type": "complete", "phase": "work", "range": "5~8", "id": "math-数学5~8练 — 完成", "early": "2026-07-11"}, {"label": "数学5~8练 — 对答案", "ddl": "2026-07-15", "subject": "math", "type": "check_answer", "phase": "check", "range": "5~8", "id": "math-数学5~8练 — 对答案", "early": null}, {"label": "数学5~8练 — 订正", "ddl": "2026-07-16", "subject": "math", "type": "correct", "phase": "correct", "range": "5~8", "id": "math-数学5~8练 — 订正", "early": null}, {"label": "数学5~8练 — 提交", "ddl": "2026-07-17", "subject": "math", "type": "submit", "phase": "submit", "range": "5~8", "id": "math-数学5~8练 — 提交", "early": null}, {"label": "数学9~12练 — 完成", "ddl": "2026-07-20", "subject": "math", "type": "complete", "phase": "work", "range": "9~12", "id": "math-数学9~12练 — 完成", "early": "2026-07-17"}, {"label": "数学9~12练 — 对答案", "ddl": "2026-07-21", "subject": "math", "type": "check_answer", "phase": "check", "range": "9~12", "id": "math-数学9~12练 — 对答案", "early": null}, {"label": "数学9~12练 — 订正", "ddl": "2026-07-22", "subject": "math", "type": "correct", "phase": "correct", "range": "9~12", "id": "math-数学9~12练 — 订正", "early": null}, {"label": "数学9~12练 — 提交", "ddl": "2026-07-23", "subject": "math", "type": "submit", "phase": "submit", "range": "9~12", "id": "math-数学9~12练 — 提交", "early": null}, {"label": "数学13~16练 — 完成", "ddl": "2026-07-26", "subject": "math", "type": "complete", "phase": "work", "range": "13~16", "id": "math-数学13~16练 — 完成", "early": "2026-07-23"}, {"label": "数学13~16练 — 对答案", "ddl": "2026-07-27", "subject": "math", "type": "check_answer", "phase": "check", "range": "13~16", "id": "math-数学13~16练 — 对答案", "early": null}, {"label": "数学13~16练 — 订正", "ddl": "2026-07-28", "subject": "math", "type": "correct", "phase": "correct", "range": "13~16", "id": "math-数学13~16练 — 订正", "early": null}, {"label": "数学13~16练 — 提交", "ddl": "2026-07-29", "subject": "math", "type": "submit", "phase": "submit", "range": "13~16", "id": "math-数学13~16练 — 提交", "early": null}, {"label": "数学17~20练 — 完成", "ddl": "2026-08-01", "subject": "math", "type": "complete", "phase": "work", "range": "17~20", "id": "math-数学17~20练 — 完成", "early": "2026-07-29"}, {"label": "数学17~20练 — 对答案", "ddl": "2026-08-02", "subject": "math", "type": "check_answer", "phase": "check", "range": "17~20", "id": "math-数学17~20练 — 对答案", "early": null}, {"label": "数学17~20练 — 订正", "ddl": "2026-08-03", "subject": "math", "type": "correct", "phase": "correct", "range": "17~20", "id": "math-数学17~20练 — 订正", "early": null}, {"label": "数学17~20练 — 提交", "ddl": "2026-08-04", "subject": "math", "type": "submit", "phase": "submit", "range": "17~20", "id": "math-数学17~20练 — 提交", "early": null}, {"label": "数学21~24练 — 完成", "ddl": "2026-08-07", "subject": "math", "type": "complete", "phase": "work", "range": "21~24", "id": "math-数学21~24练 — 完成", "early": "2026-08-04"}, {"label": "数学21~24练 — 对答案", "ddl": "2026-08-08", "subject": "math", "type": "check_answer", "phase": "check", "range": "21~24", "id": "math-数学21~24练 — 对答案", "early": null}, {"label": "数学21~24练 — 订正", "ddl": "2026-08-09", "subject": "math", "type": "correct", "phase": "correct", "range": "21~24", "id": "math-数学21~24练 — 订正", "early": null}, {"label": "数学21~24练 — 提交", "ddl": "2026-08-10", "subject": "math", "type": "submit", "phase": "submit", "range": "21~24", "id": "math-数学21~24练 — 提交", "early": null}, {"label": "数学25~27练 — 完成", "ddl": "2026-08-12", "subject": "math", "type": "complete", "phase": "work", "range": "25~27", "id": "math-数学25~27练 — 完成", "early": "2026-08-09"}, {"label": "数学25~27练 — 对答案", "ddl": "2026-08-13", "subject": "math", "type": "check_answer", "phase": "check", "range": "25~27", "id": "math-数学25~27练 — 对答案", "early": null}, {"label": "数学25~27练 — 订正", "ddl": "2026-08-14", "subject": "math", "type": "correct", "phase": "correct", "range": "25~27", "id": "math-数学25~27练 — 订正", "early": null}, {"label": "数学25~27练 — 提交", "ddl": "2026-08-15", "subject": "math", "type": "submit", "phase": "submit", "range": "25~27", "id": "math-数学25~27练 — 提交", "early": null}, {"label": "数学28~30练 — 完成", "ddl": "2026-08-18", "subject": "math", "type": "complete", "phase": "work", "range": "28~30", "id": "math-数学28~30练 — 完成", "early": "2026-08-15"}, {"label": "数学28~30练 — 对答案", "ddl": "2026-08-19", "subject": "math", "type": "check_answer", "phase": "check", "range": "28~30", "id": "math-数学28~30练 — 对答案", "early": null}, {"label": "数学28~30练 — 订正", "ddl": "2026-08-20", "subject": "math", "type": "correct", "phase": "correct", "range": "28~30", "id": "math-数学28~30练 — 订正", "early": null}, {"label": "数学28~30练 — 提交", "ddl": "2026-08-21", "subject": "math", "type": "submit", "phase": "submit", "range": "28~30", "id": "math-数学28~30练 — 提交", "early": null}, {"ddl": "2026-07-06", "label": "物理作业1 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业1 — 完成", "early": "2026-07-03"}, {"ddl": "2026-07-07", "label": "物理作业1 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业1 — 对答案", "early": null}, {"ddl": "2026-07-06", "label": "物理作业1 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业1 — 上交", "early": null}, {"ddl": "2026-07-07", "label": "物理作业2 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业2 — 完成", "early": "2026-07-04"}, {"ddl": "2026-07-08", "label": "物理作业2 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业2 — 对答案", "early": null}, {"ddl": "2026-07-07", "label": "物理作业2 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业2 — 上交", "early": null}, {"ddl": "2026-07-09", "label": "物理作业3 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业3 — 完成", "early": "2026-07-06"}, {"ddl": "2026-07-10", "label": "物理作业3 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业3 — 对答案", "early": null}, {"ddl": "2026-07-09", "label": "物理作业3 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业3 — 上交", "early": null}, {"ddl": "2026-07-10", "label": "物理作业4 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业4 — 完成", "early": "2026-07-07"}, {"ddl": "2026-07-11", "label": "物理作业4 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业4 — 对答案", "early": null}, {"ddl": "2026-07-10", "label": "物理作业4 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业4 — 上交", "early": null}, {"ddl": "2026-07-12", "label": "物理作业5 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业5 — 完成", "early": "2026-07-09"}, {"ddl": "2026-07-13", "label": "物理作业5 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业5 — 对答案", "early": null}, {"ddl": "2026-07-12", "label": "物理作业5 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业5 — 上交", "early": null}, {"ddl": "2026-07-13", "label": "物理作业6 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业6 — 完成", "early": "2026-07-10"}, {"ddl": "2026-07-14", "label": "物理作业6 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业6 — 对答案", "early": null}, {"ddl": "2026-07-13", "label": "物理作业6 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业6 — 上交", "early": null}, {"ddl": "2026-07-15", "label": "物理作业7 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业7 — 完成", "early": "2026-07-12"}, {"ddl": "2026-07-16", "label": "物理作业7 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业7 — 对答案", "early": null}, {"ddl": "2026-07-15", "label": "物理作业7 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业7 — 上交", "early": null}, {"ddl": "2026-07-16", "label": "物理作业8 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业8 — 完成", "early": "2026-07-13"}, {"ddl": "2026-07-17", "label": "物理作业8 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业8 — 对答案", "early": null}, {"ddl": "2026-07-16", "label": "物理作业8 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业8 — 上交", "early": null}, {"ddl": "2026-07-18", "label": "物理作业9 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业9 — 完成", "early": "2026-07-15"}, {"ddl": "2026-07-19", "label": "物理作业9 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业9 — 对答案", "early": null}, {"ddl": "2026-07-18", "label": "物理作业9 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业9 — 上交", "early": null}, {"ddl": "2026-07-19", "label": "物理作业10 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业10 — 完成", "early": "2026-07-16"}, {"ddl": "2026-07-20", "label": "物理作业10 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业10 — 对答案", "early": null}, {"ddl": "2026-07-19", "label": "物理作业10 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业10 — 上交", "early": null}, {"ddl": "2026-07-21", "label": "物理作业11 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业11 — 完成", "early": "2026-07-18"}, {"ddl": "2026-07-22", "label": "物理作业11 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业11 — 对答案", "early": null}, {"ddl": "2026-07-21", "label": "物理作业11 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业11 — 上交", "early": null}, {"ddl": "2026-07-22", "label": "物理作业12 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业12 — 完成", "early": "2026-07-19"}, {"ddl": "2026-07-23", "label": "物理作业12 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业12 — 对答案", "early": null}, {"ddl": "2026-07-22", "label": "物理作业12 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业12 — 上交", "early": null}, {"ddl": "2026-07-24", "label": "物理作业13 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业13 — 完成", "early": "2026-07-21"}, {"ddl": "2026-07-25", "label": "物理作业13 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业13 — 对答案", "early": null}, {"ddl": "2026-07-24", "label": "物理作业13 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业13 — 上交", "early": null}, {"ddl": "2026-07-25", "label": "物理作业14 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业14 — 完成", "early": "2026-07-22"}, {"ddl": "2026-07-26", "label": "物理作业14 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业14 — 对答案", "early": null}, {"ddl": "2026-07-25", "label": "物理作业14 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业14 — 上交", "early": null}, {"ddl": "2026-07-27", "label": "物理作业15 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业15 — 完成", "early": "2026-07-24"}, {"ddl": "2026-07-28", "label": "物理作业15 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业15 — 对答案", "early": null}, {"ddl": "2026-07-27", "label": "物理作业15 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业15 — 上交", "early": null}, {"ddl": "2026-07-28", "label": "物理作业16 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业16 — 完成", "early": "2026-07-25"}, {"ddl": "2026-07-29", "label": "物理作业16 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业16 — 对答案", "early": null}, {"ddl": "2026-07-28", "label": "物理作业16 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业16 — 上交", "early": null}, {"ddl": "2026-07-30", "label": "物理作业17 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业17 — 完成", "early": "2026-07-27"}, {"ddl": "2026-07-31", "label": "物理作业17 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业17 — 对答案", "early": null}, {"ddl": "2026-07-30", "label": "物理作业17 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业17 — 上交", "early": null}, {"ddl": "2026-07-31", "label": "物理作业18 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业18 — 完成", "early": "2026-07-28"}, {"ddl": "2026-08-01", "label": "物理作业18 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业18 — 对答案", "early": null}, {"ddl": "2026-07-31", "label": "物理作业18 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业18 — 上交", "early": null}, {"ddl": "2026-08-02", "label": "物理作业19 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业19 — 完成", "early": "2026-07-30"}, {"ddl": "2026-08-03", "label": "物理作业19 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业19 — 对答案", "early": null}, {"ddl": "2026-08-02", "label": "物理作业19 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业19 — 上交", "early": null}, {"ddl": "2026-08-03", "label": "物理作业20 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业20 — 完成", "early": "2026-07-31"}, {"ddl": "2026-08-04", "label": "物理作业20 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业20 — 对答案", "early": null}, {"ddl": "2026-08-03", "label": "物理作业20 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业20 — 上交", "early": null}, {"ddl": "2026-08-05", "label": "物理作业21 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业21 — 完成", "early": "2026-08-02"}, {"ddl": "2026-08-06", "label": "物理作业21 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业21 — 对答案", "early": null}, {"ddl": "2026-08-05", "label": "物理作业21 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业21 — 上交", "early": null}, {"ddl": "2026-08-06", "label": "物理作业22 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业22 — 完成", "early": "2026-08-03"}, {"ddl": "2026-08-07", "label": "物理作业22 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业22 — 对答案", "early": null}, {"ddl": "2026-08-06", "label": "物理作业22 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业22 — 上交", "early": null}, {"ddl": "2026-08-08", "label": "物理作业23 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业23 — 完成", "early": "2026-08-05"}, {"ddl": "2026-08-09", "label": "物理作业23 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业23 — 对答案", "early": null}, {"ddl": "2026-08-08", "label": "物理作业23 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业23 — 上交", "early": null}, {"ddl": "2026-08-09", "label": "物理作业24 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业24 — 完成", "early": "2026-08-06"}, {"ddl": "2026-08-10", "label": "物理作业24 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业24 — 对答案", "early": null}, {"ddl": "2026-08-09", "label": "物理作业24 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业24 — 上交", "early": null}, {"ddl": "2026-08-11", "label": "物理作业25 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业25 — 完成", "early": "2026-08-08"}, {"ddl": "2026-08-12", "label": "物理作业25 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业25 — 对答案", "early": null}, {"ddl": "2026-08-11", "label": "物理作业25 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业25 — 上交", "early": null}, {"ddl": "2026-08-12", "label": "物理作业26 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业26 — 完成", "early": "2026-08-09"}, {"ddl": "2026-08-13", "label": "物理作业26 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业26 — 对答案", "early": null}, {"ddl": "2026-08-12", "label": "物理作业26 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业26 — 上交", "early": null}, {"ddl": "2026-08-14", "label": "物理作业27 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业27 — 完成", "early": "2026-08-11"}, {"ddl": "2026-08-15", "label": "物理作业27 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业27 — 对答案", "early": null}, {"ddl": "2026-08-14", "label": "物理作业27 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业27 — 上交", "early": null}, {"ddl": "2026-08-15", "label": "物理作业28 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业28 — 完成", "early": "2026-08-12"}, {"ddl": "2026-08-16", "label": "物理作业28 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业28 — 对答案", "early": null}, {"ddl": "2026-08-15", "label": "物理作业28 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业28 — 上交", "early": null}, {"ddl": "2026-08-17", "label": "物理作业29 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业29 — 完成", "early": "2026-08-14"}, {"ddl": "2026-08-18", "label": "物理作业29 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业29 — 对答案", "early": null}, {"ddl": "2026-08-17", "label": "物理作业29 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业29 — 上交", "early": null}, {"ddl": "2026-08-18", "label": "物理作业30 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业30 — 完成", "early": "2026-08-15"}, {"ddl": "2026-08-19", "label": "物理作业30 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业30 — 对答案", "early": null}, {"ddl": "2026-08-18", "label": "物理作业30 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业30 — 上交", "early": null}, {"ddl": "2026-08-20", "label": "物理作业31 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业31 — 完成", "early": "2026-08-17"}, {"ddl": "2026-08-21", "label": "物理作业31 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业31 — 对答案", "early": null}, {"ddl": "2026-08-20", "label": "物理作业31 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业31 — 上交", "early": null}, {"ddl": "2026-08-21", "label": "物理作业32 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业32 — 完成", "early": "2026-08-18"}, {"ddl": "2026-08-22", "label": "物理作业32 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业32 — 对答案", "early": null}, {"ddl": "2026-08-21", "label": "物理作业32 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业32 — 上交", "early": null}, {"ddl": "2026-08-23", "label": "物理作业33 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业33 — 完成", "early": "2026-08-20"}, {"ddl": "2026-08-24", "label": "物理作业33 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业33 — 对答案", "early": null}, {"ddl": "2026-08-23", "label": "物理作业33 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业33 — 上交", "early": null}, {"ddl": "2026-07-06", "label": "地理作业1 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业1 — 完成", "early": "2026-07-03"}, {"ddl": "2026-07-07", "label": "地理作业2 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业2 — 完成", "early": "2026-07-04"}, {"ddl": "2026-07-08", "label": "地理作业3 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业3 — 完成", "early": "2026-07-05"}, {"ddl": "2026-07-09", "label": "地理作业4 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业4 — 完成", "early": "2026-07-06"}, {"ddl": "2026-07-10", "label": "地理作业5 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业5 — 完成", "early": "2026-07-07"}, {"ddl": "2026-07-12", "label": "地理作业1~5 — 订正上传", "subject": "geography", "type": "submit", "phase": "submit", "id": "geography-地理作业1~5 — 订正上传", "early": null}, {"ddl": "2026-07-13", "label": "地理作业6 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业6 — 完成", "early": "2026-07-10"}, {"ddl": "2026-07-14", "label": "地理作业7 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业7 — 完成", "early": "2026-07-11"}, {"ddl": "2026-07-15", "label": "地理作业8 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业8 — 完成", "early": "2026-07-12"}, {"ddl": "2026-07-16", "label": "地理作业9 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业9 — 完成", "early": "2026-07-13"}, {"ddl": "2026-07-17", "label": "地理作业10 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业10 — 完成", "early": "2026-07-14"}, {"ddl": "2026-07-19", "label": "地理作业6~10 — 订正上传", "subject": "geography", "type": "submit", "phase": "submit", "id": "geography-地理作业6~10 — 订正上传", "early": null}, {"ddl": "2026-07-20", "label": "地理作业11 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业11 — 完成", "early": "2026-07-17"}, {"ddl": "2026-07-21", "label": "地理作业12 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业12 — 完成", "early": "2026-07-18"}, {"ddl": "2026-07-22", "label": "地理作业13 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业13 — 完成", "early": "2026-07-19"}, {"ddl": "2026-07-23", "label": "地理作业14 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业14 — 完成", "early": "2026-07-20"}, {"ddl": "2026-07-24", "label": "地理作业15 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业15 — 完成", "early": "2026-07-21"}, {"ddl": "2026-07-26", "label": "地理作业11~15 — 订正上传", "subject": "geography", "type": "submit", "phase": "submit", "id": "geography-地理作业11~15 — 订正上传", "early": null}, {"ddl": "2026-08-03", "label": "地理作业16 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业16 — 完成", "early": "2026-07-31"}, {"ddl": "2026-08-04", "label": "地理作业17 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业17 — 完成", "early": "2026-08-01"}, {"ddl": "2026-08-05", "label": "地理作业18 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业18 — 完成", "early": "2026-08-02"}, {"ddl": "2026-08-06", "label": "地理作业19 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业19 — 完成", "early": "2026-08-03"}, {"ddl": "2026-08-07", "label": "地理作业20 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业20 — 完成", "early": "2026-08-04"}, {"ddl": "2026-08-09", "label": "地理作业16~20 — 订正上传", "subject": "geography", "type": "submit", "phase": "submit", "id": "geography-地理作业16~20 — 订正上传", "early": null}, {"ddl": "2026-08-10", "label": "地理摄影解读作业", "subject": "geography", "type": "special", "phase": "work", "id": "geography-地理摄影解读作业", "early": "2026-08-07"}, {"ddl": "2026-08-12", "label": "地理作业21 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业21 — 完成", "early": "2026-08-09"}, {"ddl": "2026-08-13", "label": "地理作业22 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业22 — 完成", "early": "2026-08-10"}, {"ddl": "2026-08-14", "label": "地理作业23 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业23 — 完成", "early": "2026-08-11"}, {"ddl": "2026-08-15", "label": "地理作业24 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业24 — 完成", "early": "2026-08-12"}, {"ddl": "2026-08-16", "label": "地理作业25 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业25 — 完成", "early": "2026-08-13"}, {"ddl": "2026-08-18", "label": "地理作业21~25 — 订正上传", "subject": "geography", "type": "submit", "phase": "submit", "id": "geography-地理作业21~25 — 订正上传", "early": null}, {"ddl": "2026-08-19", "label": "地理作业26 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业26 — 完成", "early": "2026-08-16"}, {"ddl": "2026-08-20", "label": "地理作业27 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业27 — 完成", "early": "2026-08-17"}, {"ddl": "2026-08-21", "label": "地理作业28 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业28 — 完成", "early": "2026-08-18"}, {"ddl": "2026-07-06", "label": "《论语》十二章背默", "subject": "chinese", "type": "memorize", "phase": "work", "id": "chinese-《论语》十二章背默", "early": "2026-07-03"}, {"ddl": "2026-07-07", "label": "《春江花月夜》背默", "subject": "chinese", "type": "memorize", "phase": "work", "id": "chinese-《春江花月夜》背默", "early": "2026-07-04"}, {"ddl": "2026-07-08", "label": "《春江花月夜》背默(续)", "subject": "chinese", "type": "memorize", "phase": "work", "id": "chinese-《春江花月夜》背默(续)", "early": "2026-07-05"}, {"ddl": "2026-07-09", "label": "《将进酒》背默", "subject": "chinese", "type": "memorize", "phase": "work", "id": "chinese-《将进酒》背默", "early": "2026-07-06"}, {"ddl": "2026-07-10", "label": "《无衣》《江城子》背默 + 提交五天背默", "subject": "chinese", "type": "submit", "phase": "submit", "id": "chinese-《无衣》《江城子》背默 + 提交五天背默", "early": null}, {"ddl": "2026-07-13", "label": "《大卫》1-10章", "subject": "chinese", "type": "read", "phase": "work", "id": "chinese-《大卫》1-10章", "early": "2026-07-10"}, {"ddl": "2026-07-14", "label": "《大卫》11-20章", "subject": "chinese", "type": "read", "phase": "work", "id": "chinese-《大卫》11-20章", "early": "2026-07-11"}, {"ddl": "2026-07-15", "label": "《大卫》21-30章", "subject": "chinese", "type": "read", "phase": "work", "id": "chinese-《大卫》21-30章", "early": "2026-07-12"}, {"ddl": "2026-07-16", "label": "《大卫》31-40章", "subject": "chinese", "type": "read", "phase": "work", "id": "chinese-《大卫》31-40章", "early": "2026-07-13"}, {"ddl": "2026-07-17", "label": "《大卫》41-50章", "subject": "chinese", "type": "read", "phase": "work", "id": "chinese-《大卫》41-50章", "early": "2026-07-14"}, {"ddl": "2026-07-20", "label": "《大卫》51-64章", "subject": "chinese", "type": "read", "phase": "work", "id": "chinese-《大卫》51-64章", "early": "2026-07-17"}, {"ddl": "2026-07-21", "label": "《大卫》读笔笔记 + 上传", "subject": "chinese", "type": "submit", "phase": "submit", "id": "chinese-《大卫》读笔笔记 + 上传", "early": null}, {"ddl": "2026-07-22", "label": "语文练习1", "subject": "chinese", "type": "complete", "phase": "work", "id": "chinese-语文练习1", "early": "2026-07-19"}, {"ddl": "2026-07-23", "label": "语文练习2", "subject": "chinese", "type": "complete", "phase": "work", "id": "chinese-语文练习2", "early": "2026-07-20"}, {"ddl": "2026-07-24", "label": "语文练习3 + 提交三份练习", "subject": "chinese", "type": "submit", "phase": "submit", "id": "chinese-语文练习3 + 提交三份练习", "early": null}, {"ddl": "2026-07-27", "label": "语文练习4", "subject": "chinese", "type": "complete", "phase": "work", "id": "chinese-语文练习4", "early": "2026-07-24"}, {"ddl": "2026-07-28", "label": "语文练习5", "subject": "chinese", "type": "complete", "phase": "work", "id": "chinese-语文练习5", "early": "2026-07-25"}, {"ddl": "2026-07-29", "label": "语文练习6", "subject": "chinese", "type": "complete", "phase": "work", "id": "chinese-语文练习6", "early": "2026-07-26"}, {"ddl": "2026-07-30", "label": "语文练习7", "subject": "chinese", "type": "complete", "phase": "work", "id": "chinese-语文练习7", "early": "2026-07-27"}, {"ddl": "2026-07-31", "label": "语文练习8 + 提交五份练习", "subject": "chinese", "type": "submit", "phase": "submit", "id": "chinese-语文练习8 + 提交五份练习", "early": null}, {"ddl": "2026-08-03", "label": "《百年孤独》1-2章", "subject": "chinese", "type": "read", "phase": "work", "id": "chinese-《百年孤独》1-2章", "early": "2026-07-31"}, {"ddl": "2026-08-04", "label": "《百年孤独》3-4章", "subject": "chinese", "type": "read", "phase": "work", "id": "chinese-《百年孤独》3-4章", "early": "2026-08-01"}, {"ddl": "2026-08-05", "label": "《百年孤独》5-6章", "subject": "chinese", "type": "read", "phase": "work", "id": "chinese-《百年孤独》5-6章", "early": "2026-08-02"}, {"ddl": "2026-08-06", "label": "《百年孤独》7-8章", "subject": "chinese", "type": "read", "phase": "work", "id": "chinese-《百年孤独》7-8章", "early": "2026-08-03"}, {"ddl": "2026-08-07", "label": "《百年孤独》9-10章", "subject": "chinese", "type": "read", "phase": "work", "id": "chinese-《百年孤独》9-10章", "early": "2026-08-04"}, {"ddl": "2026-08-10", "label": "《百年孤独》11-12章", "subject": "chinese", "type": "read", "phase": "work", "id": "chinese-《百年孤独》11-12章", "early": "2026-08-07"}, {"ddl": "2026-08-11", "label": "《百年孤独》13-14章", "subject": "chinese", "type": "read", "phase": "work", "id": "chinese-《百年孤独》13-14章", "early": "2026-08-08"}, {"ddl": "2026-08-12", "label": "《百年孤独》15-16章", "subject": "chinese", "type": "read", "phase": "work", "id": "chinese-《百年孤独》15-16章", "early": "2026-08-09"}, {"ddl": "2026-08-13", "label": "《百年孤独》17-18章", "subject": "chinese", "type": "read", "phase": "work", "id": "chinese-《百年孤独》17-18章", "early": "2026-08-10"}, {"ddl": "2026-08-14", "label": "《百年孤独》19-20章 + 读笔上传", "subject": "chinese", "type": "submit", "phase": "submit", "id": "chinese-《百年孤独》19-20章 + 读笔上传", "early": null}, {"ddl": "2026-07-08", "label": "英语练习1 — 答案公布", "subject": "english", "type": "check_answer", "phase": "check", "id": "english-英语练习1 — 答案公布", "early": null}, {"ddl": "2026-07-08", "label": "英语练习1 — 上交", "subject": "english", "type": "submit", "phase": "submit", "id": "english-英语练习1 — 上交", "early": null}, {"ddl": "2026-07-06", "label": "英语练习1 — 完成", "subject": "english", "type": "complete", "phase": "work", "id": "english-英语练习1 — 完成", "early": "2026-07-03"}, {"ddl": "2026-07-11", "label": "英语练习2 — 答案公布", "subject": "english", "type": "check_answer", "phase": "check", "id": "english-英语练习2 — 答案公布", "early": null}, {"ddl": "2026-07-11", "label": "英语练习2 — 上交", "subject": "english", "type": "submit", "phase": "submit", "id": "english-英语练习2 — 上交", "early": null}, {"ddl": "2026-07-09", "label": "英语练习2 — 完成", "subject": "english", "type": "complete", "phase": "work", "id": "english-英语练习2 — 完成", "early": "2026-07-06"}, {"ddl": "2026-07-14", "label": "英语练习3 — 答案公布", "subject": "english", "type": "check_answer", "phase": "check", "id": "english-英语练习3 — 答案公布", "early": null}, {"ddl": "2026-07-14", "label": "英语练习3 — 上交", "subject": "english", "type": "submit", "phase": "submit", "id": "english-英语练习3 — 上交", "early": null}, {"ddl": "2026-07-12", "label": "英语练习3 — 完成", "subject": "english", "type": "complete", "phase": "work", "id": "english-英语练习3 — 完成", "early": "2026-07-09"}, {"ddl": "2026-07-17", "label": "英语练习4 — 答案公布", "subject": "english", "type": "check_answer", "phase": "check", "id": "english-英语练习4 — 答案公布", "early": null}, {"ddl": "2026-07-17", "label": "英语练习4 — 上交", "subject": "english", "type": "submit", "phase": "submit", "id": "english-英语练习4 — 上交", "early": null}, {"ddl": "2026-07-15", "label": "英语练习4 — 完成", "subject": "english", "type": "complete", "phase": "work", "id": "english-英语练习4 — 完成", "early": "2026-07-12"}, {"ddl": "2026-07-20", "label": "英语练习5 — 答案公布", "subject": "english", "type": "check_answer", "phase": "check", "id": "english-英语练习5 — 答案公布", "early": null}, {"ddl": "2026-07-20", "label": "英语练习5 — 上交", "subject": "english", "type": "submit", "phase": "submit", "id": "english-英语练习5 — 上交", "early": null}, {"ddl": "2026-07-18", "label": "英语练习5 — 完成", "subject": "english", "type": "complete", "phase": "work", "id": "english-英语练习5 — 完成", "early": "2026-07-15"}, {"ddl": "2026-07-23", "label": "英语练习6 — 答案公布", "subject": "english", "type": "check_answer", "phase": "check", "id": "english-英语练习6 — 答案公布", "early": null}, {"ddl": "2026-07-23", "label": "英语练习6 — 上交", "subject": "english", "type": "submit", "phase": "submit", "id": "english-英语练习6 — 上交", "early": null}, {"ddl": "2026-07-21", "label": "英语练习6 — 完成", "subject": "english", "type": "complete", "phase": "work", "id": "english-英语练习6 — 完成", "early": "2026-07-18"}, {"ddl": "2026-07-26", "label": "英语练习7 — 答案公布", "subject": "english", "type": "check_answer", "phase": "check", "id": "english-英语练习7 — 答案公布", "early": null}, {"ddl": "2026-07-26", "label": "英语练习7 — 上交", "subject": "english", "type": "submit", "phase": "submit", "id": "english-英语练习7 — 上交", "early": null}, {"ddl": "2026-07-24", "label": "英语练习7 — 完成", "subject": "english", "type": "complete", "phase": "work", "id": "english-英语练习7 — 完成", "early": "2026-07-21"}, {"ddl": "2026-07-29", "label": "英语练习8 — 答案公布", "subject": "english", "type": "check_answer", "phase": "check", "id": "english-英语练习8 — 答案公布", "early": null}, {"ddl": "2026-07-29", "label": "英语练习8 — 上交", "subject": "english", "type": "submit", "phase": "submit", "id": "english-英语练习8 — 上交", "early": null}, {"ddl": "2026-07-27", "label": "英语练习8 — 完成", "subject": "english", "type": "complete", "phase": "work", "id": "english-英语练习8 — 完成", "early": "2026-07-24"}, {"ddl": "2026-08-01", "label": "英语练习9 — 答案公布", "subject": "english", "type": "check_answer", "phase": "check", "id": "english-英语练习9 — 答案公布", "early": null}, {"ddl": "2026-08-01", "label": "英语练习9 — 上交", "subject": "english", "type": "submit", "phase": "submit", "id": "english-英语练习9 — 上交", "early": null}, {"ddl": "2026-07-30", "label": "英语练习9 — 完成", "subject": "english", "type": "complete", "phase": "work", "id": "english-英语练习9 — 完成", "early": "2026-07-27"}, {"ddl": "2026-08-04", "label": "英语练习10 — 答案公布", "subject": "english", "type": "check_answer", "phase": "check", "id": "english-英语练习10 — 答案公布", "early": null}, {"ddl": "2026-08-04", "label": "英语练习10 — 上交", "subject": "english", "type": "submit", "phase": "submit", "id": "english-英语练习10 — 上交", "early": null}, {"ddl": "2026-08-02", "label": "英语练习10 — 完成", "subject": "english", "type": "complete", "phase": "work", "id": "english-英语练习10 — 完成", "early": "2026-07-30"}, {"ddl": "2026-08-07", "label": "英语练习11 — 答案公布", "subject": "english", "type": "check_answer", "phase": "check", "id": "english-英语练习11 — 答案公布", "early": null}, {"ddl": "2026-08-07", "label": "英语练习11 — 上交", "subject": "english", "type": "submit", "phase": "submit", "id": "english-英语练习11 — 上交", "early": null}, {"ddl": "2026-08-05", "label": "英语练习11 — 完成", "subject": "english", "type": "complete", "phase": "work", "id": "english-英语练习11 — 完成", "early": "2026-08-02"}, {"ddl": "2026-08-10", "label": "英语练习12 — 答案公布", "subject": "english", "type": "check_answer", "phase": "check", "id": "english-英语练习12 — 答案公布", "early": null}, {"ddl": "2026-08-10", "label": "英语练习12 — 上交", "subject": "english", "type": "submit", "phase": "submit", "id": "english-英语练习12 — 上交", "early": null}, {"ddl": "2026-08-08", "label": "英语练习12 — 完成", "subject": "english", "type": "complete", "phase": "work", "id": "english-英语练习12 — 完成", "early": "2026-08-05"}, {"ddl": "2026-08-13", "label": "英语练习13 — 答案公布", "subject": "english", "type": "check_answer", "phase": "check", "id": "english-英语练习13 — 答案公布", "early": null}, {"ddl": "2026-08-13", "label": "英语练习13 — 上交", "subject": "english", "type": "submit", "phase": "submit", "id": "english-英语练习13 — 上交", "early": null}, {"ddl": "2026-08-11", "label": "英语练习13 — 完成", "subject": "english", "type": "complete", "phase": "work", "id": "english-英语练习13 — 完成", "early": "2026-08-08"}, {"ddl": "2026-08-16", "label": "英语练习14 — 答案公布", "subject": "english", "type": "check_answer", "phase": "check", "id": "english-英语练习14 — 答案公布", "early": null}, {"ddl": "2026-08-16", "label": "英语练习14 — 上交", "subject": "english", "type": "submit", "phase": "submit", "id": "english-英语练习14 — 上交", "early": null}, {"ddl": "2026-08-14", "label": "英语练习14 — 完成", "subject": "english", "type": "complete", "phase": "work", "id": "english-英语练习14 — 完成", "early": "2026-08-11"}, {"ddl": "2026-08-19", "label": "英语练习15 — 答案公布", "subject": "english", "type": "check_answer", "phase": "check", "id": "english-英语练习15 — 答案公布", "early": null}, {"ddl": "2026-08-19", "label": "英语练习15 — 上交", "subject": "english", "type": "submit", "phase": "submit", "id": "english-英语练习15 — 上交", "early": null}, {"ddl": "2026-08-17", "label": "英语练习15 — 完成", "subject": "english", "type": "complete", "phase": "work", "id": "english-英语练习15 — 完成", "early": "2026-08-14"}, {"ddl": "2026-08-22", "label": "英语练习16 — 答案公布", "subject": "english", "type": "check_answer", "phase": "check", "id": "english-英语练习16 — 答案公布", "early": null}, {"ddl": "2026-08-22", "label": "英语练习16 — 上交", "subject": "english", "type": "submit", "phase": "submit", "id": "english-英语练习16 — 上交", "early": null}, {"ddl": "2026-08-20", "label": "英语练习16 — 完成", "subject": "english", "type": "complete", "phase": "work", "id": "english-英语练习16 — 完成", "early": "2026-08-17"}];
+const DDL_BY_DATE = {"2026-07-01": [], "2026-07-02": [], "2026-07-03": [], "2026-07-04": [], "2026-07-05": [], "2026-07-06": [{"ddl": "2026-07-06", "label": "化学作业1 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业1 — 完成", "early": "2026-07-03"}, {"ddl": "2026-07-06", "label": "化学作业1 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业1 — 对答案", "early": null}, {"ddl": "2026-07-06", "label": "化学作业1 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业1 — 上交", "early": null}, {"ddl": "2026-07-06", "label": "物理作业1 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业1 — 完成", "early": "2026-07-03"}, {"ddl": "2026-07-06", "label": "物理作业1 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业1 — 上交", "early": null}, {"ddl": "2026-07-06", "label": "地理作业1 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业1 — 完成", "early": "2026-07-03"}, {"ddl": "2026-07-06", "label": "《论语》十二章背默", "subject": "chinese", "type": "memorize", "phase": "work", "id": "chinese-《论语》十二章背默", "early": "2026-07-03"}, {"ddl": "2026-07-06", "label": "英语练习1 — 完成", "subject": "english", "type": "complete", "phase": "work", "id": "english-英语练习1 — 完成", "early": "2026-07-03"}], "2026-07-07": [{"ddl": "2026-07-07", "label": "化学作业2 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业2 — 完成", "early": "2026-07-04"}, {"ddl": "2026-07-07", "label": "化学作业2 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业2 — 对答案", "early": null}, {"ddl": "2026-07-07", "label": "化学作业2 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业2 — 上交", "early": null}, {"ddl": "2026-07-07", "label": "物理作业1 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业1 — 对答案", "early": null}, {"ddl": "2026-07-07", "label": "物理作业2 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业2 — 完成", "early": "2026-07-04"}, {"ddl": "2026-07-07", "label": "物理作业2 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业2 — 上交", "early": null}, {"ddl": "2026-07-07", "label": "地理作业2 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业2 — 完成", "early": "2026-07-04"}, {"ddl": "2026-07-07", "label": "《春江花月夜》背默", "subject": "chinese", "type": "memorize", "phase": "work", "id": "chinese-《春江花月夜》背默", "early": "2026-07-04"}], "2026-07-08": [{"ddl": "2026-07-08", "label": "化学作业3 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业3 — 完成", "early": "2026-07-05"}, {"ddl": "2026-07-08", "label": "化学作业3 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业3 — 对答案", "early": null}, {"ddl": "2026-07-08", "label": "化学作业3 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业3 — 上交", "early": null}, {"label": "数学1~4练 — 完成", "ddl": "2026-07-08", "subject": "math", "type": "complete", "phase": "work", "range": "1~4", "id": "math-数学1~4练 — 完成", "early": "2026-07-05"}, {"ddl": "2026-07-08", "label": "物理作业2 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业2 — 对答案", "early": null}, {"ddl": "2026-07-08", "label": "地理作业3 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业3 — 完成", "early": "2026-07-05"}, {"ddl": "2026-07-08", "label": "《春江花月夜》背默(续)", "subject": "chinese", "type": "memorize", "phase": "work", "id": "chinese-《春江花月夜》背默(续)", "early": "2026-07-05"}, {"ddl": "2026-07-08", "label": "英语练习1 — 答案公布", "subject": "english", "type": "check_answer", "phase": "check", "id": "english-英语练习1 — 答案公布", "early": null}, {"ddl": "2026-07-08", "label": "英语练习1 — 上交", "subject": "english", "type": "submit", "phase": "submit", "id": "english-英语练习1 — 上交", "early": null}], "2026-07-09": [{"ddl": "2026-07-09", "label": "化学作业4 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业4 — 完成", "early": "2026-07-06"}, {"ddl": "2026-07-09", "label": "化学作业4 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业4 — 对答案", "early": null}, {"ddl": "2026-07-09", "label": "化学作业4 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业4 — 上交", "early": null}, {"label": "数学1~4练 — 对答案", "ddl": "2026-07-09", "subject": "math", "type": "check_answer", "phase": "check", "range": "1~4", "id": "math-数学1~4练 — 对答案", "early": null}, {"ddl": "2026-07-09", "label": "物理作业3 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业3 — 完成", "early": "2026-07-06"}, {"ddl": "2026-07-09", "label": "物理作业3 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业3 — 上交", "early": null}, {"ddl": "2026-07-09", "label": "地理作业4 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业4 — 完成", "early": "2026-07-06"}, {"ddl": "2026-07-09", "label": "《将进酒》背默", "subject": "chinese", "type": "memorize", "phase": "work", "id": "chinese-《将进酒》背默", "early": "2026-07-06"}, {"ddl": "2026-07-09", "label": "英语练习2 — 完成", "subject": "english", "type": "complete", "phase": "work", "id": "english-英语练习2 — 完成", "early": "2026-07-06"}], "2026-07-10": [{"ddl": "2026-07-10", "label": "化学作业5 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业5 — 完成", "early": "2026-07-07"}, {"ddl": "2026-07-10", "label": "化学作业5 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业5 — 对答案", "early": null}, {"ddl": "2026-07-10", "label": "化学作业5 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业5 — 上交", "early": null}, {"label": "数学1~4练 — 订正", "ddl": "2026-07-10", "subject": "math", "type": "correct", "phase": "correct", "range": "1~4", "id": "math-数学1~4练 — 订正", "early": null}, {"ddl": "2026-07-10", "label": "物理作业3 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业3 — 对答案", "early": null}, {"ddl": "2026-07-10", "label": "物理作业4 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业4 — 完成", "early": "2026-07-07"}, {"ddl": "2026-07-10", "label": "物理作业4 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业4 — 上交", "early": null}, {"ddl": "2026-07-10", "label": "地理作业5 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业5 — 完成", "early": "2026-07-07"}, {"ddl": "2026-07-10", "label": "《无衣》《江城子》背默 + 提交五天背默", "subject": "chinese", "type": "submit", "phase": "submit", "id": "chinese-《无衣》《江城子》背默 + 提交五天背默", "early": null}], "2026-07-11": [{"label": "数学1~4练 — 提交", "ddl": "2026-07-11", "subject": "math", "type": "submit", "phase": "submit", "range": "1~4", "id": "math-数学1~4练 — 提交", "early": null}, {"ddl": "2026-07-11", "label": "物理作业4 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业4 — 对答案", "early": null}, {"ddl": "2026-07-11", "label": "英语练习2 — 答案公布", "subject": "english", "type": "check_answer", "phase": "check", "id": "english-英语练习2 — 答案公布", "early": null}, {"ddl": "2026-07-11", "label": "英语练习2 — 上交", "subject": "english", "type": "submit", "phase": "submit", "id": "english-英语练习2 — 上交", "early": null}], "2026-07-12": [{"ddl": "2026-07-12", "label": "物理作业5 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业5 — 完成", "early": "2026-07-09"}, {"ddl": "2026-07-12", "label": "物理作业5 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业5 — 上交", "early": null}, {"ddl": "2026-07-12", "label": "地理作业1~5 — 订正上传", "subject": "geography", "type": "submit", "phase": "submit", "id": "geography-地理作业1~5 — 订正上传", "early": null}, {"ddl": "2026-07-12", "label": "英语练习3 — 完成", "subject": "english", "type": "complete", "phase": "work", "id": "english-英语练习3 — 完成", "early": "2026-07-09"}], "2026-07-13": [{"ddl": "2026-07-13", "label": "化学作业6 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业6 — 完成", "early": "2026-07-10"}, {"ddl": "2026-07-13", "label": "化学作业6 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业6 — 对答案", "early": null}, {"ddl": "2026-07-13", "label": "化学作业6 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业6 — 上交", "early": null}, {"ddl": "2026-07-13", "label": "物理作业5 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业5 — 对答案", "early": null}, {"ddl": "2026-07-13", "label": "物理作业6 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业6 — 完成", "early": "2026-07-10"}, {"ddl": "2026-07-13", "label": "物理作业6 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业6 — 上交", "early": null}, {"ddl": "2026-07-13", "label": "地理作业6 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业6 — 完成", "early": "2026-07-10"}, {"ddl": "2026-07-13", "label": "《大卫》1-10章", "subject": "chinese", "type": "read", "phase": "work", "id": "chinese-《大卫》1-10章", "early": "2026-07-10"}], "2026-07-14": [{"ddl": "2026-07-14", "label": "化学作业7 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业7 — 完成", "early": "2026-07-11"}, {"ddl": "2026-07-14", "label": "化学作业7 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业7 — 对答案", "early": null}, {"ddl": "2026-07-14", "label": "化学作业7 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业7 — 上交", "early": null}, {"label": "数学5~8练 — 完成", "ddl": "2026-07-14", "subject": "math", "type": "complete", "phase": "work", "range": "5~8", "id": "math-数学5~8练 — 完成", "early": "2026-07-11"}, {"ddl": "2026-07-14", "label": "物理作业6 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业6 — 对答案", "early": null}, {"ddl": "2026-07-14", "label": "地理作业7 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业7 — 完成", "early": "2026-07-11"}, {"ddl": "2026-07-14", "label": "《大卫》11-20章", "subject": "chinese", "type": "read", "phase": "work", "id": "chinese-《大卫》11-20章", "early": "2026-07-11"}, {"ddl": "2026-07-14", "label": "英语练习3 — 答案公布", "subject": "english", "type": "check_answer", "phase": "check", "id": "english-英语练习3 — 答案公布", "early": null}, {"ddl": "2026-07-14", "label": "英语练习3 — 上交", "subject": "english", "type": "submit", "phase": "submit", "id": "english-英语练习3 — 上交", "early": null}], "2026-07-15": [{"ddl": "2026-07-15", "label": "化学作业8 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业8 — 完成", "early": "2026-07-12"}, {"ddl": "2026-07-15", "label": "化学作业8 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业8 — 对答案", "early": null}, {"ddl": "2026-07-15", "label": "化学作业8 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业8 — 上交", "early": null}, {"label": "数学5~8练 — 对答案", "ddl": "2026-07-15", "subject": "math", "type": "check_answer", "phase": "check", "range": "5~8", "id": "math-数学5~8练 — 对答案", "early": null}, {"ddl": "2026-07-15", "label": "物理作业7 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业7 — 完成", "early": "2026-07-12"}, {"ddl": "2026-07-15", "label": "物理作业7 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业7 — 上交", "early": null}, {"ddl": "2026-07-15", "label": "地理作业8 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业8 — 完成", "early": "2026-07-12"}, {"ddl": "2026-07-15", "label": "《大卫》21-30章", "subject": "chinese", "type": "read", "phase": "work", "id": "chinese-《大卫》21-30章", "early": "2026-07-12"}, {"ddl": "2026-07-15", "label": "英语练习4 — 完成", "subject": "english", "type": "complete", "phase": "work", "id": "english-英语练习4 — 完成", "early": "2026-07-12"}], "2026-07-16": [{"ddl": "2026-07-16", "label": "化学作业9 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业9 — 完成", "early": "2026-07-13"}, {"ddl": "2026-07-16", "label": "化学作业9 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业9 — 对答案", "early": null}, {"ddl": "2026-07-16", "label": "化学作业9 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业9 — 上交", "early": null}, {"label": "数学5~8练 — 订正", "ddl": "2026-07-16", "subject": "math", "type": "correct", "phase": "correct", "range": "5~8", "id": "math-数学5~8练 — 订正", "early": null}, {"ddl": "2026-07-16", "label": "物理作业7 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业7 — 对答案", "early": null}, {"ddl": "2026-07-16", "label": "物理作业8 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业8 — 完成", "early": "2026-07-13"}, {"ddl": "2026-07-16", "label": "物理作业8 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业8 — 上交", "early": null}, {"ddl": "2026-07-16", "label": "地理作业9 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业9 — 完成", "early": "2026-07-13"}, {"ddl": "2026-07-16", "label": "《大卫》31-40章", "subject": "chinese", "type": "read", "phase": "work", "id": "chinese-《大卫》31-40章", "early": "2026-07-13"}], "2026-07-17": [{"ddl": "2026-07-17", "label": "化学作业10 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业10 — 完成", "early": "2026-07-14"}, {"ddl": "2026-07-17", "label": "化学作业10 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业10 — 对答案", "early": null}, {"ddl": "2026-07-17", "label": "化学作业10 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业10 — 上交", "early": null}, {"label": "数学5~8练 — 提交", "ddl": "2026-07-17", "subject": "math", "type": "submit", "phase": "submit", "range": "5~8", "id": "math-数学5~8练 — 提交", "early": null}, {"ddl": "2026-07-17", "label": "物理作业8 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业8 — 对答案", "early": null}, {"ddl": "2026-07-17", "label": "地理作业10 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业10 — 完成", "early": "2026-07-14"}, {"ddl": "2026-07-17", "label": "《大卫》41-50章", "subject": "chinese", "type": "read", "phase": "work", "id": "chinese-《大卫》41-50章", "early": "2026-07-14"}, {"ddl": "2026-07-17", "label": "英语练习4 — 答案公布", "subject": "english", "type": "check_answer", "phase": "check", "id": "english-英语练习4 — 答案公布", "early": null}, {"ddl": "2026-07-17", "label": "英语练习4 — 上交", "subject": "english", "type": "submit", "phase": "submit", "id": "english-英语练习4 — 上交", "early": null}], "2026-07-18": [{"ddl": "2026-07-18", "label": "物理作业9 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业9 — 完成", "early": "2026-07-15"}, {"ddl": "2026-07-18", "label": "物理作业9 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业9 — 上交", "early": null}, {"ddl": "2026-07-18", "label": "英语练习5 — 完成", "subject": "english", "type": "complete", "phase": "work", "id": "english-英语练习5 — 完成", "early": "2026-07-15"}], "2026-07-19": [{"ddl": "2026-07-19", "label": "物理作业9 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业9 — 对答案", "early": null}, {"ddl": "2026-07-19", "label": "物理作业10 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业10 — 完成", "early": "2026-07-16"}, {"ddl": "2026-07-19", "label": "物理作业10 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业10 — 上交", "early": null}, {"ddl": "2026-07-19", "label": "地理作业6~10 — 订正上传", "subject": "geography", "type": "submit", "phase": "submit", "id": "geography-地理作业6~10 — 订正上传", "early": null}], "2026-07-20": [{"ddl": "2026-07-20", "label": "化学作业11 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业11 — 完成", "early": "2026-07-17"}, {"ddl": "2026-07-20", "label": "化学作业11 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业11 — 对答案", "early": null}, {"ddl": "2026-07-20", "label": "化学作业11 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业11 — 上交", "early": null}, {"label": "数学9~12练 — 完成", "ddl": "2026-07-20", "subject": "math", "type": "complete", "phase": "work", "range": "9~12", "id": "math-数学9~12练 — 完成", "early": "2026-07-17"}, {"ddl": "2026-07-20", "label": "物理作业10 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业10 — 对答案", "early": null}, {"ddl": "2026-07-20", "label": "地理作业11 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业11 — 完成", "early": "2026-07-17"}, {"ddl": "2026-07-20", "label": "《大卫》51-64章", "subject": "chinese", "type": "read", "phase": "work", "id": "chinese-《大卫》51-64章", "early": "2026-07-17"}, {"ddl": "2026-07-20", "label": "英语练习5 — 答案公布", "subject": "english", "type": "check_answer", "phase": "check", "id": "english-英语练习5 — 答案公布", "early": null}, {"ddl": "2026-07-20", "label": "英语练习5 — 上交", "subject": "english", "type": "submit", "phase": "submit", "id": "english-英语练习5 — 上交", "early": null}], "2026-07-21": [{"ddl": "2026-07-21", "label": "化学作业12 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业12 — 完成", "early": "2026-07-18"}, {"ddl": "2026-07-21", "label": "化学作业12 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业12 — 对答案", "early": null}, {"ddl": "2026-07-21", "label": "化学作业12 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业12 — 上交", "early": null}, {"label": "数学9~12练 — 对答案", "ddl": "2026-07-21", "subject": "math", "type": "check_answer", "phase": "check", "range": "9~12", "id": "math-数学9~12练 — 对答案", "early": null}, {"ddl": "2026-07-21", "label": "物理作业11 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业11 — 完成", "early": "2026-07-18"}, {"ddl": "2026-07-21", "label": "物理作业11 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业11 — 上交", "early": null}, {"ddl": "2026-07-21", "label": "地理作业12 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业12 — 完成", "early": "2026-07-18"}, {"ddl": "2026-07-21", "label": "《大卫》读笔笔记 + 上传", "subject": "chinese", "type": "submit", "phase": "submit", "id": "chinese-《大卫》读笔笔记 + 上传", "early": null}, {"ddl": "2026-07-21", "label": "英语练习6 — 完成", "subject": "english", "type": "complete", "phase": "work", "id": "english-英语练习6 — 完成", "early": "2026-07-18"}], "2026-07-22": [{"ddl": "2026-07-22", "label": "化学作业13 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业13 — 完成", "early": "2026-07-19"}, {"ddl": "2026-07-22", "label": "化学作业13 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业13 — 对答案", "early": null}, {"ddl": "2026-07-22", "label": "化学作业13 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业13 — 上交", "early": null}, {"label": "数学9~12练 — 订正", "ddl": "2026-07-22", "subject": "math", "type": "correct", "phase": "correct", "range": "9~12", "id": "math-数学9~12练 — 订正", "early": null}, {"ddl": "2026-07-22", "label": "物理作业11 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业11 — 对答案", "early": null}, {"ddl": "2026-07-22", "label": "物理作业12 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业12 — 完成", "early": "2026-07-19"}, {"ddl": "2026-07-22", "label": "物理作业12 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业12 — 上交", "early": null}, {"ddl": "2026-07-22", "label": "地理作业13 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业13 — 完成", "early": "2026-07-19"}, {"ddl": "2026-07-22", "label": "语文练习1", "subject": "chinese", "type": "complete", "phase": "work", "id": "chinese-语文练习1", "early": "2026-07-19"}], "2026-07-23": [{"ddl": "2026-07-23", "label": "化学作业14 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业14 — 完成", "early": "2026-07-20"}, {"ddl": "2026-07-23", "label": "化学作业14 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业14 — 对答案", "early": null}, {"ddl": "2026-07-23", "label": "化学作业14 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业14 — 上交", "early": null}, {"label": "数学9~12练 — 提交", "ddl": "2026-07-23", "subject": "math", "type": "submit", "phase": "submit", "range": "9~12", "id": "math-数学9~12练 — 提交", "early": null}, {"ddl": "2026-07-23", "label": "物理作业12 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业12 — 对答案", "early": null}, {"ddl": "2026-07-23", "label": "地理作业14 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业14 — 完成", "early": "2026-07-20"}, {"ddl": "2026-07-23", "label": "语文练习2", "subject": "chinese", "type": "complete", "phase": "work", "id": "chinese-语文练习2", "early": "2026-07-20"}, {"ddl": "2026-07-23", "label": "英语练习6 — 答案公布", "subject": "english", "type": "check_answer", "phase": "check", "id": "english-英语练习6 — 答案公布", "early": null}, {"ddl": "2026-07-23", "label": "英语练习6 — 上交", "subject": "english", "type": "submit", "phase": "submit", "id": "english-英语练习6 — 上交", "early": null}], "2026-07-24": [{"ddl": "2026-07-24", "label": "化学作业15 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业15 — 完成", "early": "2026-07-21"}, {"ddl": "2026-07-24", "label": "化学作业15 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业15 — 对答案", "early": null}, {"ddl": "2026-07-24", "label": "化学作业15 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业15 — 上交", "early": null}, {"ddl": "2026-07-24", "label": "物理作业13 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业13 — 完成", "early": "2026-07-21"}, {"ddl": "2026-07-24", "label": "物理作业13 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业13 — 上交", "early": null}, {"ddl": "2026-07-24", "label": "地理作业15 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业15 — 完成", "early": "2026-07-21"}, {"ddl": "2026-07-24", "label": "语文练习3 + 提交三份练习", "subject": "chinese", "type": "submit", "phase": "submit", "id": "chinese-语文练习3 + 提交三份练习", "early": null}, {"ddl": "2026-07-24", "label": "英语练习7 — 完成", "subject": "english", "type": "complete", "phase": "work", "id": "english-英语练习7 — 完成", "early": "2026-07-21"}], "2026-07-25": [{"ddl": "2026-07-25", "label": "物理作业13 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业13 — 对答案", "early": null}, {"ddl": "2026-07-25", "label": "物理作业14 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业14 — 完成", "early": "2026-07-22"}, {"ddl": "2026-07-25", "label": "物理作业14 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业14 — 上交", "early": null}], "2026-07-26": [{"label": "数学13~16练 — 完成", "ddl": "2026-07-26", "subject": "math", "type": "complete", "phase": "work", "range": "13~16", "id": "math-数学13~16练 — 完成", "early": "2026-07-23"}, {"ddl": "2026-07-26", "label": "物理作业14 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业14 — 对答案", "early": null}, {"ddl": "2026-07-26", "label": "地理作业11~15 — 订正上传", "subject": "geography", "type": "submit", "phase": "submit", "id": "geography-地理作业11~15 — 订正上传", "early": null}, {"ddl": "2026-07-26", "label": "英语练习7 — 答案公布", "subject": "english", "type": "check_answer", "phase": "check", "id": "english-英语练习7 — 答案公布", "early": null}, {"ddl": "2026-07-26", "label": "英语练习7 — 上交", "subject": "english", "type": "submit", "phase": "submit", "id": "english-英语练习7 — 上交", "early": null}], "2026-07-27": [{"label": "数学13~16练 — 对答案", "ddl": "2026-07-27", "subject": "math", "type": "check_answer", "phase": "check", "range": "13~16", "id": "math-数学13~16练 — 对答案", "early": null}, {"ddl": "2026-07-27", "label": "物理作业15 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业15 — 完成", "early": "2026-07-24"}, {"ddl": "2026-07-27", "label": "物理作业15 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业15 — 上交", "early": null}, {"ddl": "2026-07-27", "label": "语文练习4", "subject": "chinese", "type": "complete", "phase": "work", "id": "chinese-语文练习4", "early": "2026-07-24"}, {"ddl": "2026-07-27", "label": "英语练习8 — 完成", "subject": "english", "type": "complete", "phase": "work", "id": "english-英语练习8 — 完成", "early": "2026-07-24"}], "2026-07-28": [{"label": "数学13~16练 — 订正", "ddl": "2026-07-28", "subject": "math", "type": "correct", "phase": "correct", "range": "13~16", "id": "math-数学13~16练 — 订正", "early": null}, {"ddl": "2026-07-28", "label": "物理作业15 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业15 — 对答案", "early": null}, {"ddl": "2026-07-28", "label": "物理作业16 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业16 — 完成", "early": "2026-07-25"}, {"ddl": "2026-07-28", "label": "物理作业16 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业16 — 上交", "early": null}, {"ddl": "2026-07-28", "label": "语文练习5", "subject": "chinese", "type": "complete", "phase": "work", "id": "chinese-语文练习5", "early": "2026-07-25"}], "2026-07-29": [{"label": "数学13~16练 — 提交", "ddl": "2026-07-29", "subject": "math", "type": "submit", "phase": "submit", "range": "13~16", "id": "math-数学13~16练 — 提交", "early": null}, {"ddl": "2026-07-29", "label": "物理作业16 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业16 — 对答案", "early": null}, {"ddl": "2026-07-29", "label": "语文练习6", "subject": "chinese", "type": "complete", "phase": "work", "id": "chinese-语文练习6", "early": "2026-07-26"}, {"ddl": "2026-07-29", "label": "英语练习8 — 答案公布", "subject": "english", "type": "check_answer", "phase": "check", "id": "english-英语练习8 — 答案公布", "early": null}, {"ddl": "2026-07-29", "label": "英语练习8 — 上交", "subject": "english", "type": "submit", "phase": "submit", "id": "english-英语练习8 — 上交", "early": null}], "2026-07-30": [{"ddl": "2026-07-30", "label": "物理作业17 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业17 — 完成", "early": "2026-07-27"}, {"ddl": "2026-07-30", "label": "物理作业17 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业17 — 上交", "early": null}, {"ddl": "2026-07-30", "label": "语文练习7", "subject": "chinese", "type": "complete", "phase": "work", "id": "chinese-语文练习7", "early": "2026-07-27"}, {"ddl": "2026-07-30", "label": "英语练习9 — 完成", "subject": "english", "type": "complete", "phase": "work", "id": "english-英语练习9 — 完成", "early": "2026-07-27"}], "2026-07-31": [{"ddl": "2026-07-31", "label": "物理作业17 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业17 — 对答案", "early": null}, {"ddl": "2026-07-31", "label": "物理作业18 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业18 — 完成", "early": "2026-07-28"}, {"ddl": "2026-07-31", "label": "物理作业18 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业18 — 上交", "early": null}, {"ddl": "2026-07-31", "label": "语文练习8 + 提交五份练习", "subject": "chinese", "type": "submit", "phase": "submit", "id": "chinese-语文练习8 + 提交五份练习", "early": null}], "2026-08-01": [{"label": "数学17~20练 — 完成", "ddl": "2026-08-01", "subject": "math", "type": "complete", "phase": "work", "range": "17~20", "id": "math-数学17~20练 — 完成", "early": "2026-07-29"}, {"ddl": "2026-08-01", "label": "物理作业18 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业18 — 对答案", "early": null}, {"ddl": "2026-08-01", "label": "英语练习9 — 答案公布", "subject": "english", "type": "check_answer", "phase": "check", "id": "english-英语练习9 — 答案公布", "early": null}, {"ddl": "2026-08-01", "label": "英语练习9 — 上交", "subject": "english", "type": "submit", "phase": "submit", "id": "english-英语练习9 — 上交", "early": null}], "2026-08-02": [{"label": "数学17~20练 — 对答案", "ddl": "2026-08-02", "subject": "math", "type": "check_answer", "phase": "check", "range": "17~20", "id": "math-数学17~20练 — 对答案", "early": null}, {"ddl": "2026-08-02", "label": "物理作业19 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业19 — 完成", "early": "2026-07-30"}, {"ddl": "2026-08-02", "label": "物理作业19 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业19 — 上交", "early": null}, {"ddl": "2026-08-02", "label": "英语练习10 — 完成", "subject": "english", "type": "complete", "phase": "work", "id": "english-英语练习10 — 完成", "early": "2026-07-30"}], "2026-08-03": [{"ddl": "2026-08-03", "label": "化学作业16 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业16 — 完成", "early": "2026-07-31"}, {"ddl": "2026-08-03", "label": "化学作业16 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业16 — 对答案", "early": null}, {"ddl": "2026-08-03", "label": "化学作业16 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业16 — 上交", "early": null}, {"label": "数学17~20练 — 订正", "ddl": "2026-08-03", "subject": "math", "type": "correct", "phase": "correct", "range": "17~20", "id": "math-数学17~20练 — 订正", "early": null}, {"ddl": "2026-08-03", "label": "物理作业19 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业19 — 对答案", "early": null}, {"ddl": "2026-08-03", "label": "物理作业20 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业20 — 完成", "early": "2026-07-31"}, {"ddl": "2026-08-03", "label": "物理作业20 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业20 — 上交", "early": null}, {"ddl": "2026-08-03", "label": "地理作业16 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业16 — 完成", "early": "2026-07-31"}, {"ddl": "2026-08-03", "label": "《百年孤独》1-2章", "subject": "chinese", "type": "read", "phase": "work", "id": "chinese-《百年孤独》1-2章", "early": "2026-07-31"}], "2026-08-04": [{"ddl": "2026-08-04", "label": "化学作业17 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业17 — 完成", "early": "2026-08-01"}, {"ddl": "2026-08-04", "label": "化学作业17 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业17 — 对答案", "early": null}, {"ddl": "2026-08-04", "label": "化学作业17 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业17 — 上交", "early": null}, {"label": "数学17~20练 — 提交", "ddl": "2026-08-04", "subject": "math", "type": "submit", "phase": "submit", "range": "17~20", "id": "math-数学17~20练 — 提交", "early": null}, {"ddl": "2026-08-04", "label": "物理作业20 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业20 — 对答案", "early": null}, {"ddl": "2026-08-04", "label": "地理作业17 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业17 — 完成", "early": "2026-08-01"}, {"ddl": "2026-08-04", "label": "《百年孤独》3-4章", "subject": "chinese", "type": "read", "phase": "work", "id": "chinese-《百年孤独》3-4章", "early": "2026-08-01"}, {"ddl": "2026-08-04", "label": "英语练习10 — 答案公布", "subject": "english", "type": "check_answer", "phase": "check", "id": "english-英语练习10 — 答案公布", "early": null}, {"ddl": "2026-08-04", "label": "英语练习10 — 上交", "subject": "english", "type": "submit", "phase": "submit", "id": "english-英语练习10 — 上交", "early": null}], "2026-08-05": [{"ddl": "2026-08-05", "label": "化学作业18 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业18 — 完成", "early": "2026-08-02"}, {"ddl": "2026-08-05", "label": "化学作业18 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业18 — 对答案", "early": null}, {"ddl": "2026-08-05", "label": "化学作业18 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业18 — 上交", "early": null}, {"ddl": "2026-08-05", "label": "物理作业21 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业21 — 完成", "early": "2026-08-02"}, {"ddl": "2026-08-05", "label": "物理作业21 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业21 — 上交", "early": null}, {"ddl": "2026-08-05", "label": "地理作业18 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业18 — 完成", "early": "2026-08-02"}, {"ddl": "2026-08-05", "label": "《百年孤独》5-6章", "subject": "chinese", "type": "read", "phase": "work", "id": "chinese-《百年孤独》5-6章", "early": "2026-08-02"}, {"ddl": "2026-08-05", "label": "英语练习11 — 完成", "subject": "english", "type": "complete", "phase": "work", "id": "english-英语练习11 — 完成", "early": "2026-08-02"}], "2026-08-06": [{"ddl": "2026-08-06", "label": "化学作业19 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业19 — 完成", "early": "2026-08-03"}, {"ddl": "2026-08-06", "label": "化学作业19 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业19 — 对答案", "early": null}, {"ddl": "2026-08-06", "label": "化学作业19 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业19 — 上交", "early": null}, {"ddl": "2026-08-06", "label": "物理作业21 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业21 — 对答案", "early": null}, {"ddl": "2026-08-06", "label": "物理作业22 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业22 — 完成", "early": "2026-08-03"}, {"ddl": "2026-08-06", "label": "物理作业22 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业22 — 上交", "early": null}, {"ddl": "2026-08-06", "label": "地理作业19 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业19 — 完成", "early": "2026-08-03"}, {"ddl": "2026-08-06", "label": "《百年孤独》7-8章", "subject": "chinese", "type": "read", "phase": "work", "id": "chinese-《百年孤独》7-8章", "early": "2026-08-03"}], "2026-08-07": [{"ddl": "2026-08-07", "label": "化学作业20 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业20 — 完成", "early": "2026-08-04"}, {"ddl": "2026-08-07", "label": "化学作业20 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业20 — 对答案", "early": null}, {"ddl": "2026-08-07", "label": "化学作业20 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业20 — 上交", "early": null}, {"label": "数学21~24练 — 完成", "ddl": "2026-08-07", "subject": "math", "type": "complete", "phase": "work", "range": "21~24", "id": "math-数学21~24练 — 完成", "early": "2026-08-04"}, {"ddl": "2026-08-07", "label": "物理作业22 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业22 — 对答案", "early": null}, {"ddl": "2026-08-07", "label": "地理作业20 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业20 — 完成", "early": "2026-08-04"}, {"ddl": "2026-08-07", "label": "《百年孤独》9-10章", "subject": "chinese", "type": "read", "phase": "work", "id": "chinese-《百年孤独》9-10章", "early": "2026-08-04"}, {"ddl": "2026-08-07", "label": "英语练习11 — 答案公布", "subject": "english", "type": "check_answer", "phase": "check", "id": "english-英语练习11 — 答案公布", "early": null}, {"ddl": "2026-08-07", "label": "英语练习11 — 上交", "subject": "english", "type": "submit", "phase": "submit", "id": "english-英语练习11 — 上交", "early": null}], "2026-08-08": [{"label": "数学21~24练 — 对答案", "ddl": "2026-08-08", "subject": "math", "type": "check_answer", "phase": "check", "range": "21~24", "id": "math-数学21~24练 — 对答案", "early": null}, {"ddl": "2026-08-08", "label": "物理作业23 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业23 — 完成", "early": "2026-08-05"}, {"ddl": "2026-08-08", "label": "物理作业23 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业23 — 上交", "early": null}, {"ddl": "2026-08-08", "label": "英语练习12 — 完成", "subject": "english", "type": "complete", "phase": "work", "id": "english-英语练习12 — 完成", "early": "2026-08-05"}], "2026-08-09": [{"label": "数学21~24练 — 订正", "ddl": "2026-08-09", "subject": "math", "type": "correct", "phase": "correct", "range": "21~24", "id": "math-数学21~24练 — 订正", "early": null}, {"ddl": "2026-08-09", "label": "物理作业23 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业23 — 对答案", "early": null}, {"ddl": "2026-08-09", "label": "物理作业24 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业24 — 完成", "early": "2026-08-06"}, {"ddl": "2026-08-09", "label": "物理作业24 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业24 — 上交", "early": null}, {"ddl": "2026-08-09", "label": "地理作业16~20 — 订正上传", "subject": "geography", "type": "submit", "phase": "submit", "id": "geography-地理作业16~20 — 订正上传", "early": null}], "2026-08-10": [{"ddl": "2026-08-10", "label": "化学作业21 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业21 — 完成", "early": "2026-08-07"}, {"ddl": "2026-08-10", "label": "化学作业21 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业21 — 对答案", "early": null}, {"ddl": "2026-08-10", "label": "化学作业21 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业21 — 上交", "early": null}, {"label": "数学21~24练 — 提交", "ddl": "2026-08-10", "subject": "math", "type": "submit", "phase": "submit", "range": "21~24", "id": "math-数学21~24练 — 提交", "early": null}, {"ddl": "2026-08-10", "label": "物理作业24 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业24 — 对答案", "early": null}, {"ddl": "2026-08-10", "label": "地理摄影解读作业", "subject": "geography", "type": "special", "phase": "work", "id": "geography-地理摄影解读作业", "early": "2026-08-07"}, {"ddl": "2026-08-10", "label": "《百年孤独》11-12章", "subject": "chinese", "type": "read", "phase": "work", "id": "chinese-《百年孤独》11-12章", "early": "2026-08-07"}, {"ddl": "2026-08-10", "label": "英语练习12 — 答案公布", "subject": "english", "type": "check_answer", "phase": "check", "id": "english-英语练习12 — 答案公布", "early": null}, {"ddl": "2026-08-10", "label": "英语练习12 — 上交", "subject": "english", "type": "submit", "phase": "submit", "id": "english-英语练习12 — 上交", "early": null}], "2026-08-11": [{"ddl": "2026-08-11", "label": "化学作业22 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业22 — 完成", "early": "2026-08-08"}, {"ddl": "2026-08-11", "label": "化学作业22 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业22 — 对答案", "early": null}, {"ddl": "2026-08-11", "label": "化学作业22 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业22 — 上交", "early": null}, {"ddl": "2026-08-11", "label": "物理作业25 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业25 — 完成", "early": "2026-08-08"}, {"ddl": "2026-08-11", "label": "物理作业25 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业25 — 上交", "early": null}, {"ddl": "2026-08-11", "label": "《百年孤独》13-14章", "subject": "chinese", "type": "read", "phase": "work", "id": "chinese-《百年孤独》13-14章", "early": "2026-08-08"}, {"ddl": "2026-08-11", "label": "英语练习13 — 完成", "subject": "english", "type": "complete", "phase": "work", "id": "english-英语练习13 — 完成", "early": "2026-08-08"}], "2026-08-12": [{"ddl": "2026-08-12", "label": "化学作业23 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业23 — 完成", "early": "2026-08-09"}, {"ddl": "2026-08-12", "label": "化学作业23 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业23 — 对答案", "early": null}, {"ddl": "2026-08-12", "label": "化学作业23 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业23 — 上交", "early": null}, {"label": "数学25~27练 — 完成", "ddl": "2026-08-12", "subject": "math", "type": "complete", "phase": "work", "range": "25~27", "id": "math-数学25~27练 — 完成", "early": "2026-08-09"}, {"ddl": "2026-08-12", "label": "物理作业25 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业25 — 对答案", "early": null}, {"ddl": "2026-08-12", "label": "物理作业26 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业26 — 完成", "early": "2026-08-09"}, {"ddl": "2026-08-12", "label": "物理作业26 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业26 — 上交", "early": null}, {"ddl": "2026-08-12", "label": "地理作业21 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业21 — 完成", "early": "2026-08-09"}, {"ddl": "2026-08-12", "label": "《百年孤独》15-16章", "subject": "chinese", "type": "read", "phase": "work", "id": "chinese-《百年孤独》15-16章", "early": "2026-08-09"}], "2026-08-13": [{"ddl": "2026-08-13", "label": "化学作业24 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业24 — 完成", "early": "2026-08-10"}, {"ddl": "2026-08-13", "label": "化学作业24 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业24 — 对答案", "early": null}, {"ddl": "2026-08-13", "label": "化学作业24 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业24 — 上交", "early": null}, {"label": "数学25~27练 — 对答案", "ddl": "2026-08-13", "subject": "math", "type": "check_answer", "phase": "check", "range": "25~27", "id": "math-数学25~27练 — 对答案", "early": null}, {"ddl": "2026-08-13", "label": "物理作业26 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业26 — 对答案", "early": null}, {"ddl": "2026-08-13", "label": "地理作业22 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业22 — 完成", "early": "2026-08-10"}, {"ddl": "2026-08-13", "label": "《百年孤独》17-18章", "subject": "chinese", "type": "read", "phase": "work", "id": "chinese-《百年孤独》17-18章", "early": "2026-08-10"}, {"ddl": "2026-08-13", "label": "英语练习13 — 答案公布", "subject": "english", "type": "check_answer", "phase": "check", "id": "english-英语练习13 — 答案公布", "early": null}, {"ddl": "2026-08-13", "label": "英语练习13 — 上交", "subject": "english", "type": "submit", "phase": "submit", "id": "english-英语练习13 — 上交", "early": null}], "2026-08-14": [{"ddl": "2026-08-14", "label": "化学作业25 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业25 — 完成", "early": "2026-08-11"}, {"ddl": "2026-08-14", "label": "化学作业25 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业25 — 对答案", "early": null}, {"ddl": "2026-08-14", "label": "化学作业25 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业25 — 上交", "early": null}, {"label": "数学25~27练 — 订正", "ddl": "2026-08-14", "subject": "math", "type": "correct", "phase": "correct", "range": "25~27", "id": "math-数学25~27练 — 订正", "early": null}, {"ddl": "2026-08-14", "label": "物理作业27 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业27 — 完成", "early": "2026-08-11"}, {"ddl": "2026-08-14", "label": "物理作业27 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业27 — 上交", "early": null}, {"ddl": "2026-08-14", "label": "地理作业23 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业23 — 完成", "early": "2026-08-11"}, {"ddl": "2026-08-14", "label": "《百年孤独》19-20章 + 读笔上传", "subject": "chinese", "type": "submit", "phase": "submit", "id": "chinese-《百年孤独》19-20章 + 读笔上传", "early": null}, {"ddl": "2026-08-14", "label": "英语练习14 — 完成", "subject": "english", "type": "complete", "phase": "work", "id": "english-英语练习14 — 完成", "early": "2026-08-11"}], "2026-08-15": [{"label": "数学25~27练 — 提交", "ddl": "2026-08-15", "subject": "math", "type": "submit", "phase": "submit", "range": "25~27", "id": "math-数学25~27练 — 提交", "early": null}, {"ddl": "2026-08-15", "label": "物理作业27 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业27 — 对答案", "early": null}, {"ddl": "2026-08-15", "label": "物理作业28 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业28 — 完成", "early": "2026-08-12"}, {"ddl": "2026-08-15", "label": "物理作业28 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业28 — 上交", "early": null}, {"ddl": "2026-08-15", "label": "地理作业24 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业24 — 完成", "early": "2026-08-12"}], "2026-08-16": [{"ddl": "2026-08-16", "label": "物理作业28 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业28 — 对答案", "early": null}, {"ddl": "2026-08-16", "label": "地理作业25 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业25 — 完成", "early": "2026-08-13"}, {"ddl": "2026-08-16", "label": "英语练习14 — 答案公布", "subject": "english", "type": "check_answer", "phase": "check", "id": "english-英语练习14 — 答案公布", "early": null}, {"ddl": "2026-08-16", "label": "英语练习14 — 上交", "subject": "english", "type": "submit", "phase": "submit", "id": "english-英语练习14 — 上交", "early": null}], "2026-08-17": [{"ddl": "2026-08-17", "label": "化学作业26 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业26 — 完成", "early": "2026-08-14"}, {"ddl": "2026-08-17", "label": "化学作业26 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业26 — 对答案", "early": null}, {"ddl": "2026-08-17", "label": "化学作业26 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业26 — 上交", "early": null}, {"ddl": "2026-08-17", "label": "物理作业29 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业29 — 完成", "early": "2026-08-14"}, {"ddl": "2026-08-17", "label": "物理作业29 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业29 — 上交", "early": null}, {"ddl": "2026-08-17", "label": "英语练习15 — 完成", "subject": "english", "type": "complete", "phase": "work", "id": "english-英语练习15 — 完成", "early": "2026-08-14"}], "2026-08-18": [{"ddl": "2026-08-18", "label": "化学作业27 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业27 — 完成", "early": "2026-08-15"}, {"ddl": "2026-08-18", "label": "化学作业27 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业27 — 对答案", "early": null}, {"ddl": "2026-08-18", "label": "化学作业27 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业27 — 上交", "early": null}, {"label": "数学28~30练 — 完成", "ddl": "2026-08-18", "subject": "math", "type": "complete", "phase": "work", "range": "28~30", "id": "math-数学28~30练 — 完成", "early": "2026-08-15"}, {"ddl": "2026-08-18", "label": "物理作业29 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业29 — 对答案", "early": null}, {"ddl": "2026-08-18", "label": "物理作业30 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业30 — 完成", "early": "2026-08-15"}, {"ddl": "2026-08-18", "label": "物理作业30 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业30 — 上交", "early": null}, {"ddl": "2026-08-18", "label": "地理作业21~25 — 订正上传", "subject": "geography", "type": "submit", "phase": "submit", "id": "geography-地理作业21~25 — 订正上传", "early": null}], "2026-08-19": [{"ddl": "2026-08-19", "label": "化学作业28 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业28 — 完成", "early": "2026-08-16"}, {"ddl": "2026-08-19", "label": "化学作业28 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业28 — 对答案", "early": null}, {"ddl": "2026-08-19", "label": "化学作业28 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业28 — 上交", "early": null}, {"label": "数学28~30练 — 对答案", "ddl": "2026-08-19", "subject": "math", "type": "check_answer", "phase": "check", "range": "28~30", "id": "math-数学28~30练 — 对答案", "early": null}, {"ddl": "2026-08-19", "label": "物理作业30 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业30 — 对答案", "early": null}, {"ddl": "2026-08-19", "label": "地理作业26 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业26 — 完成", "early": "2026-08-16"}, {"ddl": "2026-08-19", "label": "英语练习15 — 答案公布", "subject": "english", "type": "check_answer", "phase": "check", "id": "english-英语练习15 — 答案公布", "early": null}, {"ddl": "2026-08-19", "label": "英语练习15 — 上交", "subject": "english", "type": "submit", "phase": "submit", "id": "english-英语练习15 — 上交", "early": null}], "2026-08-20": [{"ddl": "2026-08-20", "label": "化学作业29 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业29 — 完成", "early": "2026-08-17"}, {"ddl": "2026-08-20", "label": "化学作业29 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业29 — 对答案", "early": null}, {"ddl": "2026-08-20", "label": "化学作业29 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业29 — 上交", "early": null}, {"label": "数学28~30练 — 订正", "ddl": "2026-08-20", "subject": "math", "type": "correct", "phase": "correct", "range": "28~30", "id": "math-数学28~30练 — 订正", "early": null}, {"ddl": "2026-08-20", "label": "物理作业31 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业31 — 完成", "early": "2026-08-17"}, {"ddl": "2026-08-20", "label": "物理作业31 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业31 — 上交", "early": null}, {"ddl": "2026-08-20", "label": "地理作业27 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业27 — 完成", "early": "2026-08-17"}, {"ddl": "2026-08-20", "label": "英语练习16 — 完成", "subject": "english", "type": "complete", "phase": "work", "id": "english-英语练习16 — 完成", "early": "2026-08-17"}], "2026-08-21": [{"ddl": "2026-08-21", "label": "化学作业30 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业30 — 完成", "early": "2026-08-18"}, {"ddl": "2026-08-21", "label": "化学作业30 — 对答案", "subject": "chemistry", "type": "check_answer", "phase": "check", "id": "chemistry-化学作业30 — 对答案", "early": null}, {"ddl": "2026-08-21", "label": "化学作业30 — 上交", "subject": "chemistry", "type": "submit", "phase": "submit", "id": "chemistry-化学作业30 — 上交", "early": null}, {"label": "数学28~30练 — 提交", "ddl": "2026-08-21", "subject": "math", "type": "submit", "phase": "submit", "range": "28~30", "id": "math-数学28~30练 — 提交", "early": null}, {"ddl": "2026-08-21", "label": "物理作业31 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业31 — 对答案", "early": null}, {"ddl": "2026-08-21", "label": "物理作业32 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业32 — 完成", "early": "2026-08-18"}, {"ddl": "2026-08-21", "label": "物理作业32 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业32 — 上交", "early": null}, {"ddl": "2026-08-21", "label": "地理作业28 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业28 — 完成", "early": "2026-08-18"}], "2026-08-22": [{"ddl": "2026-08-22", "label": "物理作业32 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业32 — 对答案", "early": null}, {"ddl": "2026-08-22", "label": "英语练习16 — 答案公布", "subject": "english", "type": "check_answer", "phase": "check", "id": "english-英语练习16 — 答案公布", "early": null}, {"ddl": "2026-08-22", "label": "英语练习16 — 上交", "subject": "english", "type": "submit", "phase": "submit", "id": "english-英语练习16 — 上交", "early": null}], "2026-08-23": [{"ddl": "2026-08-23", "label": "物理作业33 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业33 — 完成", "early": "2026-08-20"}, {"ddl": "2026-08-23", "label": "物理作业33 — 上交", "subject": "physics", "type": "submit", "phase": "submit", "id": "physics-物理作业33 — 上交", "early": null}], "2026-08-24": [{"ddl": "2026-08-24", "label": "物理作业33 — 对答案", "subject": "physics", "type": "check_answer", "phase": "check", "id": "physics-物理作业33 — 对答案", "early": null}], "2026-08-25": [], "2026-08-26": [], "2026-08-27": [], "2026-08-28": [], "2026-08-29": [], "2026-08-30": []};
+const EARLY_BY_DATE = {"2026-07-01": [], "2026-07-02": [], "2026-07-03": [{"ddl": "2026-07-06", "label": "化学作业1 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业1 — 完成", "early": "2026-07-03"}, {"ddl": "2026-07-06", "label": "物理作业1 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业1 — 完成", "early": "2026-07-03"}, {"ddl": "2026-07-06", "label": "地理作业1 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业1 — 完成", "early": "2026-07-03"}, {"ddl": "2026-07-06", "label": "《论语》十二章背默", "subject": "chinese", "type": "memorize", "phase": "work", "id": "chinese-《论语》十二章背默", "early": "2026-07-03"}, {"ddl": "2026-07-06", "label": "英语练习1 — 完成", "subject": "english", "type": "complete", "phase": "work", "id": "english-英语练习1 — 完成", "early": "2026-07-03"}], "2026-07-04": [{"ddl": "2026-07-07", "label": "化学作业2 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业2 — 完成", "early": "2026-07-04"}, {"ddl": "2026-07-07", "label": "物理作业2 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业2 — 完成", "early": "2026-07-04"}, {"ddl": "2026-07-07", "label": "地理作业2 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业2 — 完成", "early": "2026-07-04"}, {"ddl": "2026-07-07", "label": "《春江花月夜》背默", "subject": "chinese", "type": "memorize", "phase": "work", "id": "chinese-《春江花月夜》背默", "early": "2026-07-04"}], "2026-07-05": [{"ddl": "2026-07-08", "label": "化学作业3 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业3 — 完成", "early": "2026-07-05"}, {"label": "数学1~4练 — 完成", "ddl": "2026-07-08", "subject": "math", "type": "complete", "phase": "work", "range": "1~4", "id": "math-数学1~4练 — 完成", "early": "2026-07-05"}, {"ddl": "2026-07-08", "label": "地理作业3 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业3 — 完成", "early": "2026-07-05"}, {"ddl": "2026-07-08", "label": "《春江花月夜》背默(续)", "subject": "chinese", "type": "memorize", "phase": "work", "id": "chinese-《春江花月夜》背默(续)", "early": "2026-07-05"}], "2026-07-06": [{"ddl": "2026-07-09", "label": "化学作业4 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业4 — 完成", "early": "2026-07-06"}, {"ddl": "2026-07-09", "label": "物理作业3 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业3 — 完成", "early": "2026-07-06"}, {"ddl": "2026-07-09", "label": "地理作业4 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业4 — 完成", "early": "2026-07-06"}, {"ddl": "2026-07-09", "label": "《将进酒》背默", "subject": "chinese", "type": "memorize", "phase": "work", "id": "chinese-《将进酒》背默", "early": "2026-07-06"}, {"ddl": "2026-07-09", "label": "英语练习2 — 完成", "subject": "english", "type": "complete", "phase": "work", "id": "english-英语练习2 — 完成", "early": "2026-07-06"}], "2026-07-07": [{"ddl": "2026-07-10", "label": "化学作业5 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业5 — 完成", "early": "2026-07-07"}, {"ddl": "2026-07-10", "label": "物理作业4 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业4 — 完成", "early": "2026-07-07"}, {"ddl": "2026-07-10", "label": "地理作业5 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业5 — 完成", "early": "2026-07-07"}], "2026-07-08": [], "2026-07-09": [{"ddl": "2026-07-12", "label": "物理作业5 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业5 — 完成", "early": "2026-07-09"}, {"ddl": "2026-07-12", "label": "英语练习3 — 完成", "subject": "english", "type": "complete", "phase": "work", "id": "english-英语练习3 — 完成", "early": "2026-07-09"}], "2026-07-10": [{"ddl": "2026-07-13", "label": "化学作业6 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业6 — 完成", "early": "2026-07-10"}, {"ddl": "2026-07-13", "label": "物理作业6 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业6 — 完成", "early": "2026-07-10"}, {"ddl": "2026-07-13", "label": "地理作业6 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业6 — 完成", "early": "2026-07-10"}, {"ddl": "2026-07-13", "label": "《大卫》1-10章", "subject": "chinese", "type": "read", "phase": "work", "id": "chinese-《大卫》1-10章", "early": "2026-07-10"}], "2026-07-11": [{"ddl": "2026-07-14", "label": "化学作业7 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业7 — 完成", "early": "2026-07-11"}, {"label": "数学5~8练 — 完成", "ddl": "2026-07-14", "subject": "math", "type": "complete", "phase": "work", "range": "5~8", "id": "math-数学5~8练 — 完成", "early": "2026-07-11"}, {"ddl": "2026-07-14", "label": "地理作业7 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业7 — 完成", "early": "2026-07-11"}, {"ddl": "2026-07-14", "label": "《大卫》11-20章", "subject": "chinese", "type": "read", "phase": "work", "id": "chinese-《大卫》11-20章", "early": "2026-07-11"}], "2026-07-12": [{"ddl": "2026-07-15", "label": "化学作业8 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业8 — 完成", "early": "2026-07-12"}, {"ddl": "2026-07-15", "label": "物理作业7 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业7 — 完成", "early": "2026-07-12"}, {"ddl": "2026-07-15", "label": "地理作业8 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业8 — 完成", "early": "2026-07-12"}, {"ddl": "2026-07-15", "label": "《大卫》21-30章", "subject": "chinese", "type": "read", "phase": "work", "id": "chinese-《大卫》21-30章", "early": "2026-07-12"}, {"ddl": "2026-07-15", "label": "英语练习4 — 完成", "subject": "english", "type": "complete", "phase": "work", "id": "english-英语练习4 — 完成", "early": "2026-07-12"}], "2026-07-13": [{"ddl": "2026-07-16", "label": "化学作业9 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业9 — 完成", "early": "2026-07-13"}, {"ddl": "2026-07-16", "label": "物理作业8 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业8 — 完成", "early": "2026-07-13"}, {"ddl": "2026-07-16", "label": "地理作业9 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业9 — 完成", "early": "2026-07-13"}, {"ddl": "2026-07-16", "label": "《大卫》31-40章", "subject": "chinese", "type": "read", "phase": "work", "id": "chinese-《大卫》31-40章", "early": "2026-07-13"}], "2026-07-14": [{"ddl": "2026-07-17", "label": "化学作业10 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业10 — 完成", "early": "2026-07-14"}, {"ddl": "2026-07-17", "label": "地理作业10 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业10 — 完成", "early": "2026-07-14"}, {"ddl": "2026-07-17", "label": "《大卫》41-50章", "subject": "chinese", "type": "read", "phase": "work", "id": "chinese-《大卫》41-50章", "early": "2026-07-14"}], "2026-07-15": [{"ddl": "2026-07-18", "label": "物理作业9 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业9 — 完成", "early": "2026-07-15"}, {"ddl": "2026-07-18", "label": "英语练习5 — 完成", "subject": "english", "type": "complete", "phase": "work", "id": "english-英语练习5 — 完成", "early": "2026-07-15"}], "2026-07-16": [{"ddl": "2026-07-19", "label": "物理作业10 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业10 — 完成", "early": "2026-07-16"}], "2026-07-17": [{"ddl": "2026-07-20", "label": "化学作业11 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业11 — 完成", "early": "2026-07-17"}, {"label": "数学9~12练 — 完成", "ddl": "2026-07-20", "subject": "math", "type": "complete", "phase": "work", "range": "9~12", "id": "math-数学9~12练 — 完成", "early": "2026-07-17"}, {"ddl": "2026-07-20", "label": "地理作业11 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业11 — 完成", "early": "2026-07-17"}, {"ddl": "2026-07-20", "label": "《大卫》51-64章", "subject": "chinese", "type": "read", "phase": "work", "id": "chinese-《大卫》51-64章", "early": "2026-07-17"}], "2026-07-18": [{"ddl": "2026-07-21", "label": "化学作业12 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业12 — 完成", "early": "2026-07-18"}, {"ddl": "2026-07-21", "label": "物理作业11 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业11 — 完成", "early": "2026-07-18"}, {"ddl": "2026-07-21", "label": "地理作业12 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业12 — 完成", "early": "2026-07-18"}, {"ddl": "2026-07-21", "label": "英语练习6 — 完成", "subject": "english", "type": "complete", "phase": "work", "id": "english-英语练习6 — 完成", "early": "2026-07-18"}], "2026-07-19": [{"ddl": "2026-07-22", "label": "化学作业13 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业13 — 完成", "early": "2026-07-19"}, {"ddl": "2026-07-22", "label": "物理作业12 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业12 — 完成", "early": "2026-07-19"}, {"ddl": "2026-07-22", "label": "地理作业13 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业13 — 完成", "early": "2026-07-19"}, {"ddl": "2026-07-22", "label": "语文练习1", "subject": "chinese", "type": "complete", "phase": "work", "id": "chinese-语文练习1", "early": "2026-07-19"}], "2026-07-20": [{"ddl": "2026-07-23", "label": "化学作业14 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业14 — 完成", "early": "2026-07-20"}, {"ddl": "2026-07-23", "label": "地理作业14 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业14 — 完成", "early": "2026-07-20"}, {"ddl": "2026-07-23", "label": "语文练习2", "subject": "chinese", "type": "complete", "phase": "work", "id": "chinese-语文练习2", "early": "2026-07-20"}], "2026-07-21": [{"ddl": "2026-07-24", "label": "化学作业15 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业15 — 完成", "early": "2026-07-21"}, {"ddl": "2026-07-24", "label": "物理作业13 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业13 — 完成", "early": "2026-07-21"}, {"ddl": "2026-07-24", "label": "地理作业15 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业15 — 完成", "early": "2026-07-21"}, {"ddl": "2026-07-24", "label": "英语练习7 — 完成", "subject": "english", "type": "complete", "phase": "work", "id": "english-英语练习7 — 完成", "early": "2026-07-21"}], "2026-07-22": [{"ddl": "2026-07-25", "label": "物理作业14 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业14 — 完成", "early": "2026-07-22"}], "2026-07-23": [{"label": "数学13~16练 — 完成", "ddl": "2026-07-26", "subject": "math", "type": "complete", "phase": "work", "range": "13~16", "id": "math-数学13~16练 — 完成", "early": "2026-07-23"}], "2026-07-24": [{"ddl": "2026-07-27", "label": "物理作业15 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业15 — 完成", "early": "2026-07-24"}, {"ddl": "2026-07-27", "label": "语文练习4", "subject": "chinese", "type": "complete", "phase": "work", "id": "chinese-语文练习4", "early": "2026-07-24"}, {"ddl": "2026-07-27", "label": "英语练习8 — 完成", "subject": "english", "type": "complete", "phase": "work", "id": "english-英语练习8 — 完成", "early": "2026-07-24"}], "2026-07-25": [{"ddl": "2026-07-28", "label": "物理作业16 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业16 — 完成", "early": "2026-07-25"}, {"ddl": "2026-07-28", "label": "语文练习5", "subject": "chinese", "type": "complete", "phase": "work", "id": "chinese-语文练习5", "early": "2026-07-25"}], "2026-07-26": [{"ddl": "2026-07-29", "label": "语文练习6", "subject": "chinese", "type": "complete", "phase": "work", "id": "chinese-语文练习6", "early": "2026-07-26"}], "2026-07-27": [{"ddl": "2026-07-30", "label": "物理作业17 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业17 — 完成", "early": "2026-07-27"}, {"ddl": "2026-07-30", "label": "语文练习7", "subject": "chinese", "type": "complete", "phase": "work", "id": "chinese-语文练习7", "early": "2026-07-27"}, {"ddl": "2026-07-30", "label": "英语练习9 — 完成", "subject": "english", "type": "complete", "phase": "work", "id": "english-英语练习9 — 完成", "early": "2026-07-27"}], "2026-07-28": [{"ddl": "2026-07-31", "label": "物理作业18 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业18 — 完成", "early": "2026-07-28"}], "2026-07-29": [{"label": "数学17~20练 — 完成", "ddl": "2026-08-01", "subject": "math", "type": "complete", "phase": "work", "range": "17~20", "id": "math-数学17~20练 — 完成", "early": "2026-07-29"}], "2026-07-30": [{"ddl": "2026-08-02", "label": "物理作业19 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业19 — 完成", "early": "2026-07-30"}, {"ddl": "2026-08-02", "label": "英语练习10 — 完成", "subject": "english", "type": "complete", "phase": "work", "id": "english-英语练习10 — 完成", "early": "2026-07-30"}], "2026-07-31": [{"ddl": "2026-08-03", "label": "化学作业16 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业16 — 完成", "early": "2026-07-31"}, {"ddl": "2026-08-03", "label": "物理作业20 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业20 — 完成", "early": "2026-07-31"}, {"ddl": "2026-08-03", "label": "地理作业16 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业16 — 完成", "early": "2026-07-31"}, {"ddl": "2026-08-03", "label": "《百年孤独》1-2章", "subject": "chinese", "type": "read", "phase": "work", "id": "chinese-《百年孤独》1-2章", "early": "2026-07-31"}], "2026-08-01": [{"ddl": "2026-08-04", "label": "化学作业17 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业17 — 完成", "early": "2026-08-01"}, {"ddl": "2026-08-04", "label": "地理作业17 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业17 — 完成", "early": "2026-08-01"}, {"ddl": "2026-08-04", "label": "《百年孤独》3-4章", "subject": "chinese", "type": "read", "phase": "work", "id": "chinese-《百年孤独》3-4章", "early": "2026-08-01"}], "2026-08-02": [{"ddl": "2026-08-05", "label": "化学作业18 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业18 — 完成", "early": "2026-08-02"}, {"ddl": "2026-08-05", "label": "物理作业21 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业21 — 完成", "early": "2026-08-02"}, {"ddl": "2026-08-05", "label": "地理作业18 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业18 — 完成", "early": "2026-08-02"}, {"ddl": "2026-08-05", "label": "《百年孤独》5-6章", "subject": "chinese", "type": "read", "phase": "work", "id": "chinese-《百年孤独》5-6章", "early": "2026-08-02"}, {"ddl": "2026-08-05", "label": "英语练习11 — 完成", "subject": "english", "type": "complete", "phase": "work", "id": "english-英语练习11 — 完成", "early": "2026-08-02"}], "2026-08-03": [{"ddl": "2026-08-06", "label": "化学作业19 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业19 — 完成", "early": "2026-08-03"}, {"ddl": "2026-08-06", "label": "物理作业22 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业22 — 完成", "early": "2026-08-03"}, {"ddl": "2026-08-06", "label": "地理作业19 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业19 — 完成", "early": "2026-08-03"}, {"ddl": "2026-08-06", "label": "《百年孤独》7-8章", "subject": "chinese", "type": "read", "phase": "work", "id": "chinese-《百年孤独》7-8章", "early": "2026-08-03"}], "2026-08-04": [{"ddl": "2026-08-07", "label": "化学作业20 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业20 — 完成", "early": "2026-08-04"}, {"label": "数学21~24练 — 完成", "ddl": "2026-08-07", "subject": "math", "type": "complete", "phase": "work", "range": "21~24", "id": "math-数学21~24练 — 完成", "early": "2026-08-04"}, {"ddl": "2026-08-07", "label": "地理作业20 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业20 — 完成", "early": "2026-08-04"}, {"ddl": "2026-08-07", "label": "《百年孤独》9-10章", "subject": "chinese", "type": "read", "phase": "work", "id": "chinese-《百年孤独》9-10章", "early": "2026-08-04"}], "2026-08-05": [{"ddl": "2026-08-08", "label": "物理作业23 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业23 — 完成", "early": "2026-08-05"}, {"ddl": "2026-08-08", "label": "英语练习12 — 完成", "subject": "english", "type": "complete", "phase": "work", "id": "english-英语练习12 — 完成", "early": "2026-08-05"}], "2026-08-06": [{"ddl": "2026-08-09", "label": "物理作业24 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业24 — 完成", "early": "2026-08-06"}], "2026-08-07": [{"ddl": "2026-08-10", "label": "化学作业21 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业21 — 完成", "early": "2026-08-07"}, {"ddl": "2026-08-10", "label": "地理摄影解读作业", "subject": "geography", "type": "special", "phase": "work", "id": "geography-地理摄影解读作业", "early": "2026-08-07"}, {"ddl": "2026-08-10", "label": "《百年孤独》11-12章", "subject": "chinese", "type": "read", "phase": "work", "id": "chinese-《百年孤独》11-12章", "early": "2026-08-07"}], "2026-08-08": [{"ddl": "2026-08-11", "label": "化学作业22 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业22 — 完成", "early": "2026-08-08"}, {"ddl": "2026-08-11", "label": "物理作业25 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业25 — 完成", "early": "2026-08-08"}, {"ddl": "2026-08-11", "label": "《百年孤独》13-14章", "subject": "chinese", "type": "read", "phase": "work", "id": "chinese-《百年孤独》13-14章", "early": "2026-08-08"}, {"ddl": "2026-08-11", "label": "英语练习13 — 完成", "subject": "english", "type": "complete", "phase": "work", "id": "english-英语练习13 — 完成", "early": "2026-08-08"}], "2026-08-09": [{"ddl": "2026-08-12", "label": "化学作业23 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业23 — 完成", "early": "2026-08-09"}, {"label": "数学25~27练 — 完成", "ddl": "2026-08-12", "subject": "math", "type": "complete", "phase": "work", "range": "25~27", "id": "math-数学25~27练 — 完成", "early": "2026-08-09"}, {"ddl": "2026-08-12", "label": "物理作业26 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业26 — 完成", "early": "2026-08-09"}, {"ddl": "2026-08-12", "label": "地理作业21 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业21 — 完成", "early": "2026-08-09"}, {"ddl": "2026-08-12", "label": "《百年孤独》15-16章", "subject": "chinese", "type": "read", "phase": "work", "id": "chinese-《百年孤独》15-16章", "early": "2026-08-09"}], "2026-08-10": [{"ddl": "2026-08-13", "label": "化学作业24 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业24 — 完成", "early": "2026-08-10"}, {"ddl": "2026-08-13", "label": "地理作业22 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业22 — 完成", "early": "2026-08-10"}, {"ddl": "2026-08-13", "label": "《百年孤独》17-18章", "subject": "chinese", "type": "read", "phase": "work", "id": "chinese-《百年孤独》17-18章", "early": "2026-08-10"}], "2026-08-11": [{"ddl": "2026-08-14", "label": "化学作业25 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业25 — 完成", "early": "2026-08-11"}, {"ddl": "2026-08-14", "label": "物理作业27 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业27 — 完成", "early": "2026-08-11"}, {"ddl": "2026-08-14", "label": "地理作业23 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业23 — 完成", "early": "2026-08-11"}, {"ddl": "2026-08-14", "label": "英语练习14 — 完成", "subject": "english", "type": "complete", "phase": "work", "id": "english-英语练习14 — 完成", "early": "2026-08-11"}], "2026-08-12": [{"ddl": "2026-08-15", "label": "物理作业28 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业28 — 完成", "early": "2026-08-12"}, {"ddl": "2026-08-15", "label": "地理作业24 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业24 — 完成", "early": "2026-08-12"}], "2026-08-13": [{"ddl": "2026-08-16", "label": "地理作业25 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业25 — 完成", "early": "2026-08-13"}], "2026-08-14": [{"ddl": "2026-08-17", "label": "化学作业26 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业26 — 完成", "early": "2026-08-14"}, {"ddl": "2026-08-17", "label": "物理作业29 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业29 — 完成", "early": "2026-08-14"}, {"ddl": "2026-08-17", "label": "英语练习15 — 完成", "subject": "english", "type": "complete", "phase": "work", "id": "english-英语练习15 — 完成", "early": "2026-08-14"}], "2026-08-15": [{"ddl": "2026-08-18", "label": "化学作业27 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业27 — 完成", "early": "2026-08-15"}, {"label": "数学28~30练 — 完成", "ddl": "2026-08-18", "subject": "math", "type": "complete", "phase": "work", "range": "28~30", "id": "math-数学28~30练 — 完成", "early": "2026-08-15"}, {"ddl": "2026-08-18", "label": "物理作业30 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业30 — 完成", "early": "2026-08-15"}], "2026-08-16": [{"ddl": "2026-08-19", "label": "化学作业28 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业28 — 完成", "early": "2026-08-16"}, {"ddl": "2026-08-19", "label": "地理作业26 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业26 — 完成", "early": "2026-08-16"}], "2026-08-17": [{"ddl": "2026-08-20", "label": "化学作业29 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业29 — 完成", "early": "2026-08-17"}, {"ddl": "2026-08-20", "label": "物理作业31 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业31 — 完成", "early": "2026-08-17"}, {"ddl": "2026-08-20", "label": "地理作业27 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业27 — 完成", "early": "2026-08-17"}, {"ddl": "2026-08-20", "label": "英语练习16 — 完成", "subject": "english", "type": "complete", "phase": "work", "id": "english-英语练习16 — 完成", "early": "2026-08-17"}], "2026-08-18": [{"ddl": "2026-08-21", "label": "化学作业30 — 完成", "subject": "chemistry", "type": "complete", "phase": "work", "id": "chemistry-化学作业30 — 完成", "early": "2026-08-18"}, {"ddl": "2026-08-21", "label": "物理作业32 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业32 — 完成", "early": "2026-08-18"}, {"ddl": "2026-08-21", "label": "地理作业28 — 完成", "subject": "geography", "type": "complete", "phase": "work", "id": "geography-地理作业28 — 完成", "early": "2026-08-18"}], "2026-08-19": [], "2026-08-20": [{"ddl": "2026-08-23", "label": "物理作业33 — 完成", "subject": "physics", "type": "complete", "phase": "work", "id": "physics-物理作业33 — 完成", "early": "2026-08-20"}], "2026-08-21": [], "2026-08-22": [], "2026-08-23": [], "2026-08-24": [], "2026-08-25": [], "2026-08-26": [], "2026-08-27": [], "2026-08-28": [], "2026-08-29": [], "2026-08-30": []};
+const ALL_DATES = ["2026-07-01", "2026-07-02", "2026-07-03", "2026-07-04", "2026-07-05", "2026-07-06", "2026-07-07", "2026-07-08", "2026-07-09", "2026-07-10", "2026-07-11", "2026-07-12", "2026-07-13", "2026-07-14", "2026-07-15", "2026-07-16", "2026-07-17", "2026-07-18", "2026-07-19", "2026-07-20", "2026-07-21", "2026-07-22", "2026-07-23", "2026-07-24", "2026-07-25", "2026-07-26", "2026-07-27", "2026-07-28", "2026-07-29", "2026-07-30", "2026-07-31", "2026-08-01", "2026-08-02", "2026-08-03", "2026-08-04", "2026-08-05", "2026-08-06", "2026-08-07", "2026-08-08", "2026-08-09", "2026-08-10", "2026-08-11", "2026-08-12", "2026-08-13", "2026-08-14", "2026-08-15", "2026-08-16", "2026-08-17", "2026-08-18", "2026-08-19", "2026-08-20", "2026-08-21", "2026-08-22", "2026-08-23", "2026-08-24", "2026-08-25", "2026-08-26", "2026-08-27", "2026-08-28", "2026-08-29", "2026-08-30"];
+const WEEKS = {"2026-W27": ["2026-07-01", "2026-07-02", "2026-07-03", "2026-07-04", "2026-07-05"], "2026-W28": ["2026-07-06", "2026-07-07", "2026-07-08", "2026-07-09", "2026-07-10", "2026-07-11", "2026-07-12"], "2026-W29": ["2026-07-13", "2026-07-14", "2026-07-15", "2026-07-16", "2026-07-17", "2026-07-18", "2026-07-19"], "2026-W30": ["2026-07-20", "2026-07-21", "2026-07-22", "2026-07-23", "2026-07-24", "2026-07-25", "2026-07-26"], "2026-W31": ["2026-07-27", "2026-07-28", "2026-07-29", "2026-07-30", "2026-07-31", "2026-08-01", "2026-08-02"], "2026-W32": ["2026-08-03", "2026-08-04", "2026-08-05", "2026-08-06", "2026-08-07", "2026-08-08", "2026-08-09"], "2026-W33": ["2026-08-10", "2026-08-11", "2026-08-12", "2026-08-13", "2026-08-14", "2026-08-15", "2026-08-16"], "2026-W34": ["2026-08-17", "2026-08-18", "2026-08-19", "2026-08-20", "2026-08-21", "2026-08-22", "2026-08-23"], "2026-W35": ["2026-08-24", "2026-08-25", "2026-08-26", "2026-08-27", "2026-08-28", "2026-08-29", "2026-08-30"]};
+const SUBJECT_COLORS = {"math": {"bg": "#eff6ff", "border": "#3b82f6", "text": "#1e40af", "dot": "#3b82f6"}, "physics": {"bg": "#fffbeb", "border": "#f59e0b", "text": "#92400e", "dot": "#f59e0b"}, "chemistry": {"bg": "#f5f3ff", "border": "#8b5cf6", "text": "#5b21b6", "dot": "#8b5cf6"}, "geography": {"bg": "#ecfdf5", "border": "#10b981", "text": "#065f46", "dot": "#10b981"}, "chinese": {"bg": "#fef2f2", "border": "#ef4444", "text": "#991b1b", "dot": "#ef4444"}, "english": {"bg": "#f0fdfa", "border": "#14b8a6", "text": "#0f766e", "dot": "#14b8a6"}};
+const SUBJECT_NAMES = {"math": "数学", "physics": "物理", "chemistry": "化学", "geography": "地理", "chinese": "语文", "english": "英语"};
+const DDL_DASHBOARD = [{"date": "2026-07-06", "label": "化学作业1 — 完成", "subject": "chemistry", "type": "complete", "days_left": 5}, {"date": "2026-07-06", "label": "化学作业1 — 对答案", "subject": "chemistry", "type": "check_answer", "days_left": 5}, {"date": "2026-07-06", "label": "化学作业1 — 上交", "subject": "chemistry", "type": "submit", "days_left": 5}, {"date": "2026-07-06", "label": "物理作业1 — 完成", "subject": "physics", "type": "complete", "days_left": 5}, {"date": "2026-07-06", "label": "物理作业1 — 上交", "subject": "physics", "type": "submit", "days_left": 5}, {"date": "2026-07-06", "label": "地理作业1 — 完成", "subject": "geography", "type": "complete", "days_left": 5}, {"date": "2026-07-06", "label": "《论语》十二章背默", "subject": "chinese", "type": "memorize", "days_left": 5}, {"date": "2026-07-06", "label": "英语练习1 — 完成", "subject": "english", "type": "complete", "days_left": 5}, {"date": "2026-07-07", "label": "化学作业2 — 完成", "subject": "chemistry", "type": "complete", "days_left": 6}, {"date": "2026-07-07", "label": "化学作业2 — 对答案", "subject": "chemistry", "type": "check_answer", "days_left": 6}, {"date": "2026-07-07", "label": "化学作业2 — 上交", "subject": "chemistry", "type": "submit", "days_left": 6}, {"date": "2026-07-07", "label": "物理作业1 — 对答案", "subject": "physics", "type": "check_answer", "days_left": 6}, {"date": "2026-07-07", "label": "物理作业2 — 完成", "subject": "physics", "type": "complete", "days_left": 6}, {"date": "2026-07-07", "label": "物理作业2 — 上交", "subject": "physics", "type": "submit", "days_left": 6}, {"date": "2026-07-07", "label": "地理作业2 — 完成", "subject": "geography", "type": "complete", "days_left": 6}, {"date": "2026-07-07", "label": "《春江花月夜》背默", "subject": "chinese", "type": "memorize", "days_left": 6}, {"date": "2026-07-08", "label": "化学作业3 — 完成", "subject": "chemistry", "type": "complete", "days_left": 7}, {"date": "2026-07-08", "label": "化学作业3 — 对答案", "subject": "chemistry", "type": "check_answer", "days_left": 7}, {"date": "2026-07-08", "label": "化学作业3 — 上交", "subject": "chemistry", "type": "submit", "days_left": 7}, {"date": "2026-07-08", "label": "数学1~4练 — 完成", "subject": "math", "type": "complete", "days_left": 7}, {"date": "2026-07-08", "label": "物理作业2 — 对答案", "subject": "physics", "type": "check_answer", "days_left": 7}, {"date": "2026-07-08", "label": "地理作业3 — 完成", "subject": "geography", "type": "complete", "days_left": 7}, {"date": "2026-07-08", "label": "《春江花月夜》背默(续)", "subject": "chinese", "type": "memorize", "days_left": 7}, {"date": "2026-07-08", "label": "英语练习1 — 答案公布", "subject": "english", "type": "check_answer", "days_left": 7}, {"date": "2026-07-08", "label": "英语练习1 — 上交", "subject": "english", "type": "submit", "days_left": 7}, {"date": "2026-07-09", "label": "化学作业4 — 完成", "subject": "chemistry", "type": "complete", "days_left": 8}, {"date": "2026-07-09", "label": "化学作业4 — 对答案", "subject": "chemistry", "type": "check_answer", "days_left": 8}, {"date": "2026-07-09", "label": "化学作业4 — 上交", "subject": "chemistry", "type": "submit", "days_left": 8}, {"date": "2026-07-09", "label": "数学1~4练 — 对答案", "subject": "math", "type": "check_answer", "days_left": 8}, {"date": "2026-07-09", "label": "物理作业3 — 完成", "subject": "physics", "type": "complete", "days_left": 8}, {"date": "2026-07-09", "label": "物理作业3 — 上交", "subject": "physics", "type": "submit", "days_left": 8}, {"date": "2026-07-09", "label": "地理作业4 — 完成", "subject": "geography", "type": "complete", "days_left": 8}, {"date": "2026-07-09", "label": "《将进酒》背默", "subject": "chinese", "type": "memorize", "days_left": 8}, {"date": "2026-07-09", "label": "英语练习2 — 完成", "subject": "english", "type": "complete", "days_left": 8}, {"date": "2026-07-10", "label": "化学作业5 — 完成", "subject": "chemistry", "type": "complete", "days_left": 9}, {"date": "2026-07-10", "label": "化学作业5 — 对答案", "subject": "chemistry", "type": "check_answer", "days_left": 9}, {"date": "2026-07-10", "label": "化学作业5 — 上交", "subject": "chemistry", "type": "submit", "days_left": 9}, {"date": "2026-07-10", "label": "数学1~4练 — 订正", "subject": "math", "type": "correct", "days_left": 9}, {"date": "2026-07-10", "label": "物理作业3 — 对答案", "subject": "physics", "type": "check_answer", "days_left": 9}, {"date": "2026-07-10", "label": "物理作业4 — 完成", "subject": "physics", "type": "complete", "days_left": 9}, {"date": "2026-07-10", "label": "物理作业4 — 上交", "subject": "physics", "type": "submit", "days_left": 9}, {"date": "2026-07-10", "label": "地理作业5 — 完成", "subject": "geography", "type": "complete", "days_left": 9}, {"date": "2026-07-10", "label": "《无衣》《江城子》背默 + 提交五天背默", "subject": "chinese", "type": "submit", "days_left": 9}, {"date": "2026-07-11", "label": "数学1~4练 — 提交", "subject": "math", "type": "submit", "days_left": 10}, {"date": "2026-07-11", "label": "物理作业4 — 对答案", "subject": "physics", "type": "check_answer", "days_left": 10}, {"date": "2026-07-11", "label": "英语练习2 — 答案公布", "subject": "english", "type": "check_answer", "days_left": 10}, {"date": "2026-07-11", "label": "英语练习2 — 上交", "subject": "english", "type": "submit", "days_left": 10}, {"date": "2026-07-12", "label": "物理作业5 — 完成", "subject": "physics", "type": "complete", "days_left": 11}, {"date": "2026-07-12", "label": "物理作业5 — 上交", "subject": "physics", "type": "submit", "days_left": 11}, {"date": "2026-07-12", "label": "地理作业1~5 — 订正上传", "subject": "geography", "type": "submit", "days_left": 11}, {"date": "2026-07-12", "label": "英语练习3 — 完成", "subject": "english", "type": "complete", "days_left": 11}, {"date": "2026-07-13", "label": "化学作业6 — 完成", "subject": "chemistry", "type": "complete", "days_left": 12}, {"date": "2026-07-13", "label": "化学作业6 — 对答案", "subject": "chemistry", "type": "check_answer", "days_left": 12}, {"date": "2026-07-13", "label": "化学作业6 — 上交", "subject": "chemistry", "type": "submit", "days_left": 12}, {"date": "2026-07-13", "label": "物理作业5 — 对答案", "subject": "physics", "type": "check_answer", "days_left": 12}, {"date": "2026-07-13", "label": "物理作业6 — 完成", "subject": "physics", "type": "complete", "days_left": 12}, {"date": "2026-07-13", "label": "物理作业6 — 上交", "subject": "physics", "type": "submit", "days_left": 12}, {"date": "2026-07-13", "label": "地理作业6 — 完成", "subject": "geography", "type": "complete", "days_left": 12}, {"date": "2026-07-13", "label": "《大卫》1-10章", "subject": "chinese", "type": "read", "days_left": 12}, {"date": "2026-07-14", "label": "化学作业7 — 完成", "subject": "chemistry", "type": "complete", "days_left": 13}, {"date": "2026-07-14", "label": "化学作业7 — 对答案", "subject": "chemistry", "type": "check_answer", "days_left": 13}, {"date": "2026-07-14", "label": "化学作业7 — 上交", "subject": "chemistry", "type": "submit", "days_left": 13}, {"date": "2026-07-14", "label": "数学5~8练 — 完成", "subject": "math", "type": "complete", "days_left": 13}, {"date": "2026-07-14", "label": "物理作业6 — 对答案", "subject": "physics", "type": "check_answer", "days_left": 13}, {"date": "2026-07-14", "label": "地理作业7 — 完成", "subject": "geography", "type": "complete", "days_left": 13}, {"date": "2026-07-14", "label": "《大卫》11-20章", "subject": "chinese", "type": "read", "days_left": 13}, {"date": "2026-07-14", "label": "英语练习3 — 答案公布", "subject": "english", "type": "check_answer", "days_left": 13}, {"date": "2026-07-14", "label": "英语练习3 — 上交", "subject": "english", "type": "submit", "days_left": 13}];
+
+// ============================================================
+// Task completion state (localStorage + URL hash + Cloud Server)
+// ============================================================
+const TASK_DONE_KEY = 'summer_plan_task_done_v2';
+const SYNC_SERVER_KEY = 'summer_plan_sync_server';
+
+let _doneCache = null;
+let _syncServerUrl = localStorage.getItem(SYNC_SERVER_KEY) || '';
+let _syncPollTimer = null;
+let _lastServerVersion = 0;
+
+function loadDone() {
+    if (_doneCache) return _doneCache;
+    try { _doneCache = new Set(JSON.parse(localStorage.getItem(TASK_DONE_KEY)) || []); }
+    catch(e) { _doneCache = new Set(); }
+    return _doneCache;
+}
+
+function saveDoneToStorage() {
+    localStorage.setItem(TASK_DONE_KEY, JSON.stringify([...loadDone()]));
+}
+
+function isDone(tid) {
+    return loadDone().has(tid);
+}
+
+function toggleDone(tid) {
+    const done = loadDone();
+    if (done.has(tid)) done.delete(tid);
+    else done.add(tid);
+    saveDoneToStorage();
+    updateUrlHash();
+    pushToServer();
+    refreshAllVisible();
+}
+
+// ============================================================
+// Cloud server sync — all devices share the same progress
+// ============================================================
+function getSyncServerUrl() {
+    if (_syncServerUrl) return _syncServerUrl;
+    // Auto-detect: if the HTML and API are on the same origin, use it
+    if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+        // Not local — try same-origin as potential sync server
+        return window.location.origin;
+    }
+    return null;
+}
+
+async function pushToServer() {
+    const serverUrl = getSyncServerUrl();
+    if (!serverUrl) return;
+    const done = [...loadDone()];
+    try {
+        const resp = await fetch(serverUrl + '/api/summer2026', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ tasks: done, version: Date.now() })
+        });
+        if (resp.ok) {
+            const data = await resp.json();
+            _lastServerVersion = data.updated || 0;
+            updateSyncUI('connected');
+        }
+    } catch(e) { /* server unreachable — that's OK */ }
+}
+
+async function pullFromServer() {
+    const serverUrl = getSyncServerUrl();
+    if (!serverUrl) return false;
+    try {
+        const resp = await fetch(serverUrl + '/api/summer2026');
+        if (!resp.ok) return false;
+        const data = await resp.json();
+        if (data.tasks && data.updated > _lastServerVersion) {
+            _lastServerVersion = data.updated;
+            const local = loadDone();
+            const remote = new Set(data.tasks);
+            let changed = false;
+            // Merge: union of local and remote
+            for (const tid of remote) { if (!local.has(tid)) { local.add(tid); changed = true; } }
+            if (changed) {
+                saveDoneToStorage();
+                _doneCache = null;
+                updateSyncUI('synced');
+                return true;
+            }
+        }
+        updateSyncUI('connected');
+    } catch(e) { updateSyncUI('offline'); }
+    return false;
+}
+
+function startSyncPolling() {
+    if (_syncPollTimer) clearInterval(_syncPollTimer);
+    if (!_syncServerUrl) return;
+    // Pull every 3 seconds, push on change
+    _syncPollTimer = setInterval(async () => {
+        const changed = await pullFromServer();
+        if (changed) refreshAllVisible();
+    }, 3000);
+}
+
+function setSyncServer(url) {
+    url = url.replace(/\/+$/, '');
+    _syncServerUrl = url;
+    if (url) {
+        localStorage.setItem(SYNC_SERVER_KEY, url);
+        updateSyncUI('connecting');
+        pullFromServer().then(changed => {
+            if (changed) refreshAllVisible();
+            startSyncPolling();
+        });
+    } else {
+        localStorage.removeItem(SYNC_SERVER_KEY);
+        if (_syncPollTimer) clearInterval(_syncPollTimer);
+        updateSyncUI('disconnected');
+    }
+}
+
+function updateSyncUI(state) {
+    const bar = document.getElementById('sync-bar');
+    const dot = document.getElementById('sync-dot');
+    const status = document.getElementById('sync-status');
+    if (!bar || !dot || !status) return;
+    
+    dot.className = 'dot ' + (state === 'connected' || state === 'synced' ? 'green' : 
+                              state === 'connecting' ? 'yellow' : 'gray');
+    
+    if (state === 'connected') {
+        status.textContent = '云同步已连接';
+        bar.style.background = '#f0fdf4';
+        bar.style.borderColor = '#bbf7d0';
+    } else if (state === 'synced') {
+        status.textContent = '刚刚从云端同步';
+        bar.style.background = '#f0fdf4';
+        bar.style.borderColor = '#bbf7d0';
+        setTimeout(() => updateSyncUI('connected'), 2000);
+    } else if (state === 'connecting') {
+        status.textContent = '正在连接云同步...';
+        bar.style.background = '#fefce8';
+        bar.style.borderColor = '#fde68a';
+    } else if (state === 'offline') {
+        status.textContent = '云同步离线（使用链接分享）';
+        bar.style.background = '#fef2f2';
+        bar.style.borderColor = '#fecaca';
+    } else {
+        status.textContent = '📎 链接即进度（可配置云同步）';
+        bar.style.background = '#f8fafc';
+        bar.style.borderColor = '#e2e8f0';
+    }
+}
+
+function promptSyncServer() {
+    const current = _syncServerUrl || '';
+    const url = prompt('请输入同步服务器地址：\n\n将暑假计划文件夹放入云盘（微云/iCloud/OneDrive），\n所有设备打开同一地址即可自动同步。\n\n服务器地址示例：\nhttps://your-server.com', current);
+    if (url !== null) {
+        setSyncServer(url.trim());
+        showToast(url.trim() ? '云同步已启用！所有设备进度自动同步' : '云同步已关闭');
+    }
+}
+const ALL_TASK_IDS = ALL_TASKS.map(t => t.id);
+
+function encodeHash() {
+    // Build bit array: for each known task ID, 1=done 0=not
+    const done = loadDone();
+    const bits = ALL_TASK_IDS.map(id => done.has(id) ? '1' : '0').join('');
+    // Convert binary string to bytes, then base64url
+    const byteLen = Math.ceil(bits.length / 8);
+    const bytes = new Uint8Array(byteLen);
+    for (let i = 0; i < bits.length; i++) {
+        if (bits[i] === '1') {
+            bytes[Math.floor(i / 8)] |= (1 << (7 - (i % 8)));
+        }
+    }
+    // Base64 encode without padding (=), URL-safe
+    let b64 = btoa(String.fromCharCode(...bytes));
+    b64 = b64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    return b64;
+}
+
+function decodeHash(hash) {
+    if (!hash || hash.length === 0) return [];
+    try {
+        // Restore padding and standard base64
+        let b64 = hash.replace(/-/g, '+').replace(/_/g, '/');
+        while (b64.length % 4) b64 += '=';
+        const binary = atob(b64);
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+        const ids = [];
+        for (let i = 0; i < ALL_TASK_IDS.length; i++) {
+            const byteIdx = Math.floor(i / 8);
+            const bitIdx = 7 - (i % 8);
+            if (byteIdx < bytes.length && (bytes[byteIdx] & (1 << bitIdx))) {
+                ids.push(ALL_TASK_IDS[i]);
+            }
+        }
+        return ids;
+    } catch(e) { return []; }
+}
+
+function updateUrlHash() {
+    const hash = encodeHash();
+    const url = new URL(window.location);
+    url.hash = hash;
+    history.replaceState(null, '', url.toString());
+}
+
+function loadFromHash() {
+    const hash = window.location.hash.replace(/^#/, '');
+    if (!hash) return false;
+    const ids = decodeHash(hash);
+    if (ids.length === 0) return false;
+    const done = loadDone();
+    let changed = false;
+    for (const id of ids) {
+        if (!done.has(id)) { done.add(id); changed = true; }
+    }
+    if (changed) {
+        saveDoneToStorage();
+        _doneCache = null;
+    }
+    return changed;
+}
+
+function copySyncLink() {
+    updateUrlHash();
+    const url = window.location.href;
+    navigator.clipboard.writeText(url).then(() => {
+        showToast('链接已复制！发到手机/另一台电脑打开即可');
+    }).catch(() => {
+        showToast('复制失败，请手动复制地址栏链接');
+    });
+}
+
+function showQRCode() {
+    updateUrlHash();
+    const url = encodeURIComponent(window.location.href);
+    const qrSrc = 'https://api.qrserver.com/v1/create-qr-code/?size=280x280&data=' + url;
+    document.getElementById('qr-img').src = qrSrc;
+    document.getElementById('qr-modal').style.display = 'flex';
+}
+
+// ============================================================
+// Universal export/import (works in all browsers)
+// ============================================================
+function exportProgress() {
+    const data = { tasks: [...loadDone()], exportedAt: new Date().toISOString(), version: 'v2' };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = '暑假进度.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('进度已导出 → 传到手机/其他设备后点「导入」即可');
+}
+
+function importProgress(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        try {
+            const data = JSON.parse(e.target.result);
+            if (!data.tasks || !Array.isArray(data.tasks)) throw new Error('格式不对');
+            const done = loadDone();
+            let count = 0;
+            for (const tid of data.tasks) {
+                if (!done.has(tid)) { done.add(tid); count++; }
+            }
+            if (count > 0) {
+                saveDoneToStorage();
+                _doneCache = null;
+                refreshAllVisible();
+                showToast('已导入 ' + count + ' 条完成记录，所有视图已刷新');
+            } else {
+                showToast('导入成功，没有新完成的记录');
+            }
+        } catch(err) {
+            showToast('导入失败：文件格式不正确');
+        }
+    };
+    reader.readAsText(file);
+    input.value = '';
+}
+
+function showToast(msg) {
+    let toast = document.getElementById('sync-toast');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'sync-toast';
+        toast.className = 'toast';
+        document.body.appendChild(toast);
+    }
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toast._timeout);
+    toast._timeout = setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+// Drag-and-drop import on the entire page
+document.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    if (e.dataTransfer.types.includes('Files')) {
+        document.body.classList.add('drag-over');
+    }
+});
+
+document.addEventListener('dragleave', (e) => {
+    if (e.target === document.body || e.target === document.documentElement) {
+        document.body.classList.remove('drag-over');
+    }
+});
+
+document.addEventListener('drop', (e) => {
+    e.preventDefault();
+    document.body.classList.remove('drag-over');
+    const file = e.dataTransfer.files[0];
+    if (file && file.name.endsWith('.json')) {
+        const fakeInput = { files: [file], value: '' };
+        importProgress(fakeInput);
+    }
+});
+
+function refreshAllVisible() {
+    renderDDLDashboard();
+    renderCalendar();
+    renderArrangeTable();
+    renderTodoList();
+}
+
+// ============================================================
+// DDL Dashboard rendering
+// ============================================================
+function renderDDLDashboard() {
+    const grid = document.getElementById('ddl-grid');
+    const today = new Date();
+    
+    let upcoming = [];
+    for (let i = 0; i < 14; i++) {
+        let d = new Date(today);
+        d.setDate(d.getDate() + i);
+        let ds = d.toISOString().slice(0,10);
+        if (DDL_BY_DATE[ds]) {
+            for (let t of DDL_BY_DATE[ds]) {
+                upcoming.push({...t, date: ds, daysLeft: i});
+            }
+        }
+    }
+    
+    grid.innerHTML = upcoming.map(t => {
+        const c = SUBJECT_COLORS[t.subject];
+        const done = isDone(t.id);
+        let urgencyClass = done ? '' : (t.daysLeft <= 1 ? 'urgent' : '');
+        const daysText = t.daysLeft === 0 ? '今天截止!' : t.daysLeft === 1 ? '明天截止' : `${t.daysLeft}天后`;
+        const daysColor = t.daysLeft <= 1 ? 'var(--danger)' : t.daysLeft <= 3 ? 'var(--warn)' : 'var(--ok)';
+        return `<div class='ddl-card ${urgencyClass} ${done ? "completed" : ""}' style='background:${c.bg};border-color:${c.border};'>
+            <input type='checkbox' class='ddl-check' ${done ? "checked" : ""} onclick='event.stopPropagation();toggleDone("${t.id}")' title='标记完成'>
+            <span class='label'>${SUBJECT_NAMES[t.subject]}: ${t.label}<span class='phase-badge ${t.phase}'>${({work:'做',check:'对',correct:'订',submit:'交',read:'读',memorize:'背',special:'专项'})[t.phase]||''}</span></span>
+            <span class='meta' style='color:${daysColor};font-weight:600;'>${done ? "✓" : daysText}</span>
+        </div>`;
+    }).join('');
+    
+    if (upcoming.length === 0) {
+        grid.innerHTML = '<p style="color:var(--text2);grid-column:1/-1;">暂无近期截止任务</p>';
+    }
+}
+
+// ============================================================
+// Calendar rendering
+// ============================================================
+function formatDateCN(ds) {
+    const d = new Date(ds + 'T00:00:00');
+    const m = d.getMonth() + 1;
+    const day = d.getDate();
+    const wds = ['周日','周一','周二','周三','周四','周五','周六'];
+    return `${m}/${day} ${wds[d.getDay()]}`;
+}
+
+function taskTag(t) {
+    const done = isDone(t.id);
+    const phaseMap = {work:'做',check:'对',correct:'订',submit:'交',read:'读',memorize:'背',special:'专项'};
+    const ph = phaseMap[t.phase] || '';
+    return `<label class='task-check' title='${t.label}'>
+        <input type='checkbox' ${done ? "checked" : ""} onchange='toggleDone("${t.id}")'>
+        <span class='task-tag ${t.subject} ${done ? "completed" : ""}'>${t.label}<span class='phase-badge ${t.phase}'>${ph}</span></span>
+    </label>`;
+}
+
+function renderCalendar() {
+    const grid = document.getElementById('week-grid');
+    
+    // Save open weeks before re-render
+    const openWeeks = new Set();
+    document.querySelectorAll('.week-body.open').forEach(el => openWeeks.add(el.id));
+    
+    let html = '';
+    
+    for (const [wk, dates] of Object.entries(WEEKS)) {
+        if (dates.length === 0) continue;
+        const first = dates[0], last = dates[dates.length-1];
+        const wkId = 'w_' + wk;
+        const isOpen = openWeeks.has(wkId);
+        
+        html += `<div class='week-card'>
+            <div class='week-hdr' onclick='toggleWeek("${wkId}")'>
+                <h3>${wk} · ${formatDateCN(first)} - ${formatDateCN(last)}</h3>
+                <button class='btn' id='${wkId}_btn'>${isOpen ? '收起' : '展开'}</button>
+            </div>
+            <div class='week-body${isOpen ? ' open' : ''}' id='${wkId}'>`;
+        
+        for (const ds of dates) {
+            const ddlTasks = (DDL_BY_DATE[ds] || []).filter(t => t.phase === 'submit');
+            const earlyTasks = EARLY_BY_DATE[ds] || [];
+            
+            html += `<div class='day-row'>
+                <div class='day-label'>${formatDateCN(ds)}</div>
+                <div class='day-col'>`;
+            
+            if (ddlTasks.length === 0) {
+                html += '<span class="empty-tag">—</span>';
+            } else {
+                html += ddlTasks.map(t => taskTag(t)).join('');
+            }
+            
+            html += `</div><div class='day-col'>`;
+            
+            if (earlyTasks.length === 0) {
+                html += '<span class="empty-tag">—</span>';
+            } else {
+                html += earlyTasks.map(t => taskTag(t)).join('');
+            }
+            
+            html += '</div></div>';
+        }
+        
+        html += '</div></div>';
+    }
+    
+    grid.innerHTML = html;
+}
+
+function toggleWeek(id) {
+    const body = document.getElementById(id);
+    const btn = document.getElementById(id + '_btn');
+    if (body.classList.contains('open')) {
+        body.classList.remove('open');
+        btn.textContent = '展开';
+    } else {
+        body.classList.add('open');
+        btn.textContent = '收起';
+    }
+}
+
+function expandAllWeeks() {
+    document.querySelectorAll('.week-body').forEach(el => el.classList.add('open'));
+    document.querySelectorAll('.week-hdr .btn').forEach(el => el.textContent = '收起');
+}
+
+function collapseAllWeeks() {
+    document.querySelectorAll('.week-body').forEach(el => el.classList.remove('open'));
+    document.querySelectorAll('.week-hdr .btn').forEach(el => el.textContent = '展开');
+}
+
+// ============================================================
+// Arrange table rendering
+// ============================================================
+let arrangeFilter = 'all';
+
+function renderArrangeTable() {
+    const tbody = document.getElementById('arrange-tbody');
+    
+    let tasks = [...ALL_TASKS];
+    // Only show work-phase tasks (the stuff you actually DO ahead of time)
+    if (arrangeFilter === 'all') {
+        tasks = tasks.filter(t => t.phase === 'work' || t.phase === 'read' || t.phase === 'memorize' || t.phase === 'special');
+    } else {
+        tasks = tasks.filter(t => t.subject === arrangeFilter && (t.phase === 'work' || t.phase === 'read' || t.phase === 'memorize' || t.phase === 'special'));
+    }
+    tasks.sort((a,b) => {
+        const ea = a.early || a.ddl;
+        const eb = b.early || b.ddl;
+        if (ea !== eb) return ea.localeCompare(eb);
+        return a.subject.localeCompare(b.subject);
+    });
+    
+    tbody.innerHTML = tasks.map(t => {
+        const done = isDone(t.id);
+        const earlyD = t.early ? new Date(t.early + 'T00:00:00') : null;
+        const ddlD = new Date(t.ddl + 'T00:00:00');
+        const buffer = t.early ? Math.round((ddlD - earlyD) / (1000*60*60*24)) : 0;
+        const phaseMap = {work:'做',read:'读',memorize:'背',special:'专项'};
+        const ph = phaseMap[t.phase] || '';
+        
+        return `<tr class='${done ? "completed" : ""}'>
+            <td><span class='task-tag ${t.subject}'>${SUBJECT_NAMES[t.subject]}</span></td>
+            <td>${t.label}<span class='phase-badge ${t.phase}'>${ph}</span></td>
+            <td><input type='checkbox' class='arrange-check' ${done ? "checked" : ""} onchange='toggleDone("${t.id}")'></td>
+            <td>${t.early ? `<span class='buffer-badge'>${formatDateCN(t.early)}</span>` : '<span style="color:#94a3b8;">—</span>'}</td>
+            <td><span class='ddl-badge'>${formatDateCN(t.ddl)}</span></td>
+            <td style='text-align:center;font-weight:600;color:${done ? "#94a3b8" : "#166534"};'>${buffer}天</td>
+        </tr>`;
+    }).join('');
+    
+    if (tasks.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text2);">无匹配任务（订正/提交类请查看日历视图和DDL仪表盘）</td></tr>';
+    }
+}
+
+function filterArrange(subj) {
+    arrangeFilter = subj;
+    renderArrangeTable();
+    document.querySelectorAll('#arrange-filter-btns .btn').forEach(b => b.classList.remove('btn-primary'));
+    document.querySelector(`#arrange-filter-btns .btn:nth-child(${['all','math','physics','chemistry','geography','chinese','english'].indexOf(subj)+1})`).classList.add('btn-primary');
+}
+
+// ============================================================
+// Tab switching
+// ============================================================
+function switchTab(name) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+    
+    const tabMap = {'calendar':'pane-calendar','arrange':'pane-arrange','todo':'pane-todo','advice':'pane-advice'};
+    document.getElementById(tabMap[name]).classList.add('active');
+    
+    const btns = document.querySelectorAll('.tab-bar .tab-btn');
+    const names = ['calendar','arrange','todo','advice'];
+    btns[names.indexOf(name)].classList.add('active');
+    
+    if (name === 'arrange') renderArrangeTable();
+    if (name === 'todo') renderTodoList();
+}
+
+// ============================================================
+// Todo list (localStorage)
+// ============================================================
+const TODO_KEY = 'summer_plan_todos_v2';
+
+function getTodos() {
+    try { return JSON.parse(localStorage.getItem(TODO_KEY)) || []; }
+    catch(e) { return []; }
+}
+
+function saveTodos(todos) { localStorage.setItem(TODO_KEY, JSON.stringify(todos)); }
+
+function addTodo() {
+    const subject = document.getElementById('todo-subject').value;
+    const text = document.getElementById('todo-text').value.trim();
+    const date = document.getElementById('todo-date').value;
+    
+    if (!text) return;
+    
+    const todos = getTodos();
+    todos.push({
+        id: Date.now(),
+        subject: subject || 'other',
+        text: text,
+        date: date || new Date().toISOString().slice(0,10),
+        done: false,
+        created: new Date().toISOString()
+    });
+    saveTodos(todos);
+    document.getElementById('todo-text').value = '';
+    renderTodoList();
+}
+
+function toggleTodo(id) {
+    const todos = getTodos();
+    const t = todos.find(x => x.id === id);
+    if (t) t.done = !t.done;
+    saveTodos(todos);
+    renderTodoList();
+}
+
+function deleteTodo(id) {
+    let todos = getTodos();
+    todos = todos.filter(x => x.id !== id);
+    saveTodos(todos);
+    renderTodoList();
+}
+
+function renderTodoList() {
+    const list = document.getElementById('todo-list');
+    let todos = getTodos();
+    
+    // Sort: incomplete first (by date), then completed (by date)
+    const incomplete = todos.filter(t => !t.done).sort((a,b) => a.date.localeCompare(b.date));
+    const complete = todos.filter(t => t.done).sort((a,b) => b.date.localeCompare(a.date));
+    todos = [...incomplete, ...complete];
+    
+    list.innerHTML = todos.map(t => {
+        const c = SUBJECT_COLORS[t.subject] || {dot:'#94a3b8'};
+        const subjName = SUBJECT_NAMES[t.subject] || '';
+        return `<li class='todo-item ${t.done ? "done" : ""}'>
+            <input type='checkbox' ${t.done ? "checked" : ""} onchange='toggleTodo(${t.id})'>
+            <span class='todo-text'>${subjName ? "<span style='color:"+c.dot+";font-weight:600;'>["+subjName+"]</span> " : ""}${t.text}</span>
+            <span class='todo-date'>${t.date}</span>
+            <button class='todo-del' onclick='deleteTodo(${t.id})' title='删除'>×</button>
+        </li>`;
+    }).join('');
+    
+    if (todos.length === 0) {
+        list.innerHTML = '<li style="color:var(--text2);padding:12px 0;font-style:italic;">还没有待办，用上方输入框添加第一条吧</li>';
+    }
+}
+
+// ============================================================
+// Init
+// ============================================================
+document.addEventListener('DOMContentLoaded', async () => {
+    renderDDLDashboard();
+    renderCalendar();
+    renderTodoList();
+    
+    // 1. Cloud server sync (primary — all devices auto-sync)
+    if (_syncServerUrl) {
+        updateSyncUI('connecting');
+        const changed = await pullFromServer();
+        if (changed) refreshAllVisible();
+        startSyncPolling();
+    }
+    
+    // 2. URL hash (fallback — manual link sharing)
+    if (loadFromHash()) {
+        refreshAllVisible();
+        if (!_syncServerUrl) showToast('进度已从链接恢复');
+    }
+    
+    // 3. Update hash to reflect current state  
+    updateUrlHash();
+    
+    // Set default todo date to today
+    document.getElementById('todo-date').value = new Date().toISOString().slice(0,10);
+});
+</script>
+</body>
+</html>
